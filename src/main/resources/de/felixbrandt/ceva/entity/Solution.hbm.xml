@@ -1,0 +1,19 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"><hibernate-mapping>
+	<class name="de.felixbrandt.ceva.entity.Solution">
+		<id name="solution">
+			<generator class="increment" />
+		</id>
+		<many-to-one name="algorithm" class="de.felixbrandt.ceva.entity.Algorithm" fetch="select">
+			<column name="algorithm" />
+		</many-to-one>
+		<many-to-one name="instance" class="de.felixbrandt.ceva.entity.Instance" fetch="select">
+			<column name="instance" />
+		</many-to-one>
+		<property name="version" />
+		<property name="stdout" type="org.hibernate.type.StringClobType" />
+		<property name="stderr" type="org.hibernate.type.StringClobType" />
+		<property name="machine" type="org.hibernate.type.StringClobType" />
+		<property name="runtime" />
+		<property name="parameters" type="org.hibernate.type.TextType" />
+	</class>
+</hibernate-mapping>

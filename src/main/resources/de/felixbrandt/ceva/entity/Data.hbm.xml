@@ -1,0 +1,35 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+  <class name="de.felixbrandt.ceva.entity.Data">
+    <id name="data">
+      <generator class="increment"></generator>
+    </id>
+    <property name="version" />
+    <union-subclass name="de.felixbrandt.ceva.entity.InstanceData">
+      <many-to-one name="source" class="de.felixbrandt.ceva.entity.Instance" fetch="select" />
+      <many-to-one name="rule" class="de.felixbrandt.ceva.entity.InstanceMetric" fetch="select" />
+      <union-subclass name="de.felixbrandt.ceva.entity.InstanceDataInteger">
+      	<property name="value" />
+      </union-subclass>
+      <union-subclass name="de.felixbrandt.ceva.entity.InstanceDataString">
+        <property name="value" type="org.hibernate.type.StringClobType"/>
+      </union-subclass>
+      <union-subclass name="de.felixbrandt.ceva.entity.InstanceDataDouble">
+        <property name="value"/>
+      </union-subclass>
+    </union-subclass>
+    <union-subclass name="de.felixbrandt.ceva.entity.SolutionData">
+      <many-to-one name="source" class="de.felixbrandt.ceva.entity.Solution" fetch="select" />
+      <many-to-one name="rule" class="de.felixbrandt.ceva.entity.SolutionMetric" fetch="select" />
+      <union-subclass name="de.felixbrandt.ceva.entity.SolutionDataInteger">
+      	<property name="value" />
+      </union-subclass>
+      <union-subclass name="de.felixbrandt.ceva.entity.SolutionDataString">
+        <property name="value"  type="org.hibernate.type.StringClobType"/>
+      </union-subclass>
+      <union-subclass name="de.felixbrandt.ceva.entity.SolutionDataDouble">
+        <property name="value" />
+      </union-subclass>
+    </union-subclass>
+  </class>
+</hibernate-mapping>

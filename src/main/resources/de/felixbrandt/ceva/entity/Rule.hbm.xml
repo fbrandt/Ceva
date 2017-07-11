@@ -1,0 +1,40 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="de.felixbrandt.ceva.entity.Rule">
+		<id name="id" column="id">
+			<generator class="increment"></generator>
+		</id>
+		<property name="name" />
+		<property name="description" type="org.hibernate.type.StringClobType" />
+		<property name="basePath" type="org.hibernate.type.StringClobType" />
+		<property name="versionPath" type="org.hibernate.type.StringClobType" />
+		<property name="runPath" type="org.hibernate.type.StringClobType" />
+		<property name="active" />
+
+		<union-subclass name="de.felixbrandt.ceva.entity.Metric">
+			<property name="type" column="METRICTYPE">
+				<type name="org.hibernate.type.EnumType">
+					<param name="enumClass">de.felixbrandt.ceva.entity.MetricType</param>
+					<param name="type">12</param>
+				</type>
+			</property>
+			<union-subclass name="de.felixbrandt.ceva.entity.InstanceMetric" />
+			<union-subclass name="de.felixbrandt.ceva.entity.SolutionMetric">
+				<property name="mode" column="CONTENTMODE">
+					<type name="org.hibernate.type.EnumType">
+						<param name="enumClass">de.felixbrandt.ceva.controller.base.ContentMode</param>
+						<param name="type">12</param>
+					</type>
+				</property>
+			</union-subclass>
+		</union-subclass>
+		<union-subclass name="de.felixbrandt.ceva.entity.Algorithm">
+			<property name="repeat" column="REPEATS">
+				<type name="org.hibernate.type.IntegerType" />
+			</property>
+			<property name="parameterString" column="PARAMETERS">
+			 <type name="org.hibernate.type.TextType" />
+			</property>
+		</union-subclass>
+	</class>
+</hibernate-mapping>
