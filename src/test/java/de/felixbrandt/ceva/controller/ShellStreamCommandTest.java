@@ -13,7 +13,6 @@ import java.util.Vector;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.felixbrandt.ceva.controller.ShellStreamCommand;
 import de.felixbrandt.ceva.controller.base.Command;
 import de.felixbrandt.support.StreamSupport;
 
@@ -68,7 +67,8 @@ public class ShellStreamCommandTest
     if (!"Linux".equals(System.getProperty("os.name"))) {
       final File file = new File("test/result.log");
       FileInputStream stderr = new FileInputStream(file.getPath());
-      final Command command = new ShellStreamCommand("find /C \"Lorem ipsum\"", stderr);
+      final Command command = new ShellStreamCommand(
+              "C:\\WINDOWS\\System32\\find.exe /C \"Lorem ipsum\"", stderr);
       assertEquals(76, Integer.parseInt(command.getStdoutString().trim()));
       assertEquals("", command.getStderrString());
     }
