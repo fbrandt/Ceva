@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <string.h>
 
 struct Edge
 {
@@ -35,16 +36,15 @@ int find (int node)
 
 void calcMST (const Edges& edges)
 {
-  std::cout << n_nodes << std::endl;
-  for (int i = 0; i < n_edges; ++i) {
-    int from_set = find(edges[i].from);
-    int to_set = find(edges[i].to);
-    std::cerr << "[STDERR] checking edge " << edges[i].from <<
-        " " << edges[i].to << " " << edges[i].cost << " ";
+  for (Edges::const_iterator e = edges.begin(); e != edges.end(); ++e) {
+    int from_set = find(e->from);
+    int to_set = find(e->to);
+    std::cerr << "[STDERR] checking edge " << e->from <<
+        " " << e->to << " " << e->cost << " ";
     if (from_set != to_set) {
       std::cerr << "using edge" << std::endl;
       node_set[from_set] = to_set;    
-      std::cout << edges[i].from << " " << edges[i].to << " " << edges[i].cost << std::endl;
+      std::cout << e->from << " " << e->to << " " << e->cost << std::endl;
     } else {
       std::cerr << "skipping edge" << std::endl;
     }
@@ -53,24 +53,43 @@ void calcMST (const Edges& edges)
 
 int main (int args, char** argv)
 {
-  int n_nodes, n_edges;
+  int n_nodes = 0;
   Edges edges;
   
   std::cin >> n_nodes;
   init(n_nodes);
 
-  do {
+  while (true) {
     Edge e;
     std::cin >> e.from >> e.to >> e.cost;
-    edges.push_back(e);
-  } while (!std::cin.eof());
+    if (!std::cin.eof()) {
+      edges.push_back(e);
+    } else {
+      break;
+    }
+  };
+
   std::sort(edges.begin(), edges.end());
 
   if (args <= 1) {
-    calcMST();
+    std::cout << n_nodes << std::endl;
+    calcMST(edges);
   } else {
-    
+    if (strcmp("nodes", argv[1]) == 0) {
+      std::cout << n_nodes << std::endl;
+    } else if (strcmp("edges", argv[1]) == 0) {
+      std::cout << edges.size() << std::endl;
+    } else if (strcmp("cost", argv[1]) == 0) {
+      int total_cost = 0;
+      for (Edges::const_iterator i = edges.begin(); i != edges.end(); ++i) {
+        total_cost += i->cost;
+      }
+      std::cout << total_cost << std::endl;
+    } else {
+     std::cerr << "unknown command" << std::endl;
+    }
   }
   
   return 0;
 }
+

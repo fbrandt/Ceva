@@ -1,4 +1,4 @@
-# Tutorial: Basic CEVA configuration and workflow
+﻿# Tutorial: Basic CEVA configuration and workflow
 This tutorial explains how to configure instances, algorithms, and metrics for use with CEVA.
 
 ## 1. The basic scenario
@@ -16,6 +16,7 @@ It has 4 nodes (0 to 3) and 5 edges. The third line defines an edge between node
 The application (`mst.exe`) uses the system's [standard streams][IO] for input/output. It reads the graph from standard input stream, prints the edges of the MST to standard output stream. Furthermore, some debugging information is written to standard error stream.
 ```sh
 $ mst.exe < graph1.txt
+4
 [STDERR] checking edge 0 1 1 using edge
 0 1 1
 [STDERR] checking edge 0 2 1 using edge
