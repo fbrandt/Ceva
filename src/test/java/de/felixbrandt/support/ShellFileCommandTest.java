@@ -1,4 +1,4 @@
-package de.felixbrandt.ceva.controller;
+package de.felixbrandt.support;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -9,8 +9,8 @@ import java.io.InputStream;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.felixbrandt.ceva.controller.ShellFileCommand;
 import de.felixbrandt.ceva.controller.base.Command;
+import de.felixbrandt.support.ShellFileCommand;
 import de.felixbrandt.support.StreamSupport;
 
 public class ShellFileCommandTest
