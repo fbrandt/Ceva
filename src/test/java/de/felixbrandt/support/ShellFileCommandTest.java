@@ -9,9 +9,8 @@ import java.io.InputStream;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.felixbrandt.ceva.controller.base.Command;
-import de.felixbrandt.support.ShellFileCommand;
-import de.felixbrandt.support.StreamSupport;
+import de.felixbrandt.support.ShellCommand.ShellCommandError;
+import de.felixbrandt.support.ShellCommand.ShellCommandWarning;
 
 public class ShellFileCommandTest
 {
@@ -25,9 +24,10 @@ public class ShellFileCommandTest
   }
 
   @Test
-  public void testRun ()
+  public void testRun () throws ShellCommandError, ShellCommandWarning
   {
-    final Command command = new ShellFileCommand("echo 1", stdin);
+    final ShellFileCommand command = new ShellFileCommand("echo 1", stdin);
+    command.run();
     assertEquals(1, Integer.parseInt(command.getStdoutString().trim()));
     assertEquals("", command.getStderrString());
     assertEquals(0, command.getExitCode());
@@ -36,21 +36,29 @@ public class ShellFileCommandTest
   @Test
   public void testRunFail ()
   {
-    final Command command = new ShellFileCommand("invalidcommand", stdin);
+    final ShellFileCommand command = new ShellFileCommand("invalidcommand", stdin);
+    try {
+      command.run();
+    } catch (Exception e) {
+      // do nothing
+    }
+
     assertEquals("", command.getStdoutString());
     assertTrue(command.getStderrString().contains("invalidcommand"));
     assertNotEquals(0, command.getExitCode());
   }
 
   @Test
-  public void testGetExitCode ()
+  public void testGetExitCode () throws ShellCommandError, ShellCommandWarning
   {
-    final Command command = new ShellFileCommand("exit 1", stdin);
+    final ShellFileCommand command = new ShellFileCommand("exit 1", stdin);
+    command.run();
     assertEquals(1, command.getExitCode());
   }
 
   @Test(timeout = 5000)
-  public void testRuntime () throws InterruptedException
+  public void testRuntime ()
+          throws InterruptedException, ShellCommandError, ShellCommandWarning
   {
     final String osname = System.getProperty("os.name");
     String count_param = "-c";
@@ -59,7 +67,9 @@ public class ShellFileCommandTest
       count_param = "-n";
     }
 
-    final Command command = new ShellFileCommand("ping " + count_param + " 2 127.0.0.1", stdin);
+    final ShellFileCommand command = new ShellFileCommand(
+            "ping " + count_param + " 2 127.0.0.1", stdin);
+    command.run();
     Thread.sleep(1000);
     assertEquals(1.0, command.getRuntime(), 0.5);
   }

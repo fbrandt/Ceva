@@ -13,9 +13,7 @@ import java.util.Vector;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.felixbrandt.ceva.controller.base.Command;
-import de.felixbrandt.support.ShellStreamCommand;
-import de.felixbrandt.support.StreamSupport;
+import de.felixbrandt.support.ShellCommand.ShellCommandError;
 
 public class ShellStreamCommandTest
 {
@@ -45,54 +43,59 @@ public class ShellStreamCommandTest
   }
 
   @Test
-  public void testRun ()
+  public void testRun () throws ShellCommandError
   {
-    final Command command = new ShellStreamCommand("echo 1", stdin);
+    final ShellStreamCommand command = new ShellStreamCommand("echo 1", stdin);
+    command.run();
     assertEquals(1, Integer.parseInt(command.getStdoutString().trim()));
     assertEquals("", command.getStderrString());
     assertEquals(0, command.getExitCode());
   }
 
   @Test
-  public void testRunFail ()
+  public void testRunFail () throws ShellCommandError
   {
-    final Command command = new ShellStreamCommand("invalidcommand", stdin);
+    final ShellStreamCommand command = new ShellStreamCommand("invalidcommand", stdin);
+    command.run();
     assertEquals("", command.getStdoutString());
     assertTrue(command.getStderrString().contains("invalidcommand"));
     assertNotEquals(0, command.getExitCode());
   }
 
   @Test(timeout = 10000)
-  public void testFind () throws FileNotFoundException
+  public void testFind () throws FileNotFoundException, ShellCommandError
   {
     if (!"Linux".equals(System.getProperty("os.name"))) {
       final File file = new File("test/result.log");
       FileInputStream stderr = new FileInputStream(file.getPath());
-      final Command command = new ShellStreamCommand(
+      final ShellStreamCommand command = new ShellStreamCommand(
               "C:\\WINDOWS\\System32\\find.exe /C \"Lorem ipsum\"", stderr);
+      command.run();
       assertEquals(76, Integer.parseInt(command.getStdoutString().trim()));
       assertEquals("", command.getStderrString());
     }
   }
 
   @Test
-  public void testGetStderr ()
+  public void testGetStderr () throws ShellCommandError
   {
-    final Command command = new ShellStreamCommand("echo 1 >&2", stdin);
+    final ShellStreamCommand command = new ShellStreamCommand("echo 1 >&2", stdin);
+    command.run();
     assertEquals("", command.getStdoutString());
     assertEquals("1", command.getStderrString().substring(0, 1));
     assertEquals(0, command.getExitCode());
   }
 
   @Test
-  public void testGetExitCode ()
+  public void testGetExitCode () throws ShellCommandError
   {
-    final Command command = new ShellStreamCommand("exit 1", stdin);
+    final ShellStreamCommand command = new ShellStreamCommand("exit 1", stdin);
+    command.run();
     assertEquals(1, command.getExitCode());
   }
 
   @Test(timeout = 5000)
-  public void testRuntime () throws InterruptedException
+  public void testRuntime () throws InterruptedException, ShellCommandError
   {
     final String osname = System.getProperty("os.name");
     String count_param = "-c";
@@ -101,8 +104,9 @@ public class ShellStreamCommandTest
       count_param = "-n";
     }
 
-    final Command command = new ShellStreamCommand("ping " + count_param + " 2 127.0.0.1",
-            stdin);
+    final ShellStreamCommand command = new ShellStreamCommand(
+            "ping " + count_param + " 2 127.0.0.1", stdin);
+    command.run();
     Thread.sleep(1000);
     assertEquals(1.0, command.getRuntime(), 0.5);
   }

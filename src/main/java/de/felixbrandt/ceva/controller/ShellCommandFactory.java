@@ -3,7 +3,6 @@ package de.felixbrandt.ceva.controller;
 import java.io.InputStream;
 
 import de.felixbrandt.ceva.controller.base.Command;
-import de.felixbrandt.support.ShellFileCommand;
 
 /**
  * Factory creating ShellCommand objects.

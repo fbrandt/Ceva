@@ -15,6 +15,26 @@ public abstract class ShellCommand
   private long process_started;
   private long process_ended;
 
+  public class ShellCommandError extends Exception
+  {
+    private static final long serialVersionUID = 1L;
+
+    ShellCommandError(String message)
+    {
+      super(message);
+    }
+  }
+
+  public class ShellCommandWarning extends Exception
+  {
+    private static final long serialVersionUID = 1L;
+
+    ShellCommandWarning(String message)
+    {
+      super(message);
+    }
+  }
+
   protected final Process startProcess (final String[] command) throws IOException
   {
     if (process == null) {
