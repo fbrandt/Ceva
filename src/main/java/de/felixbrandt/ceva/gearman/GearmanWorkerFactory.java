@@ -52,7 +52,7 @@ public class GearmanWorkerFactory implements WorkerFactory
     final GearmanJobServerConnection conn = new GearmanNIOJobServerConnection(config.getHost(),
             config.getPort());
 
-    return new GearmanJobWorker(conn, getFunctionFactory());
+    return new GearmanJobWorker(conn, getFunctionFactory(), config.getWorkerIdleTimeout());
   }
 
 }

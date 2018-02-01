@@ -66,9 +66,26 @@ public class WorkerPool
     return threads.size();
   }
 
+  private final void cleanupThreads ()
+  {
+    for (int i = 0; i < threads.size(); i++) {
+      if (threads.get(i).getState() == Thread.State.TERMINATED) {
+        try {
+          threads.get(i).join();
+          workers.remove(i);
+          threads.remove(i);
+        } catch (InterruptedException e) {
+          // do nothing
+        }
+      }
+    }
+  }
+
   public final boolean isRunning ()
   {
-    return running;
+    cleanupThreads();
+
+    return running && activeCount() > 0;
   }
 
 }
