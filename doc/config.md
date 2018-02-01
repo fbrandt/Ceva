@@ -76,6 +76,7 @@ By default CEVA executes all experiments and metrics with one worker on the loca
 
 ### Parameters
  * `host`: Host address of the Gearman job server to send/receive jobs and results (default: empty)
+ * `idle_timeout`: Stop worker after receiving no job for n seconds (no timeout: 0, default: 0)
  * `job_queue`: Name of the Gearman queue to send/receive results (default: `ceva`)
  * `mode`: runtime mode of this CEVA instance: `master` or `slave` (default: `master`)
  * `port`: Port of the Gearman job server (default: 4730)
