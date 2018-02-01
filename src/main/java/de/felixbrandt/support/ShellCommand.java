@@ -11,9 +11,11 @@ import java.util.Vector;
 public abstract class ShellCommand
 {
   private static final double MICROSECONDS_PER_SECOND = 1000.0;
+  private String command;
+  private InputStream stdin;
   private Process process;
-  private long process_started;
-  private long process_ended;
+  private long process_start_time;
+  private long process_finish_time;
 
   public class ShellCommandError extends Exception
   {
@@ -35,10 +37,26 @@ public abstract class ShellCommand
     }
   }
 
+  public ShellCommand(String _command, InputStream _stdin)
+  {
+    command = _command;
+    stdin = _stdin;
+  }
+
+  public final String getCommand ()
+  {
+    return command;
+  }
+
+  protected final InputStream getStdin ()
+  {
+    return stdin;
+  }
+
   protected final Process startProcess (final String[] command) throws IOException
   {
     if (process == null) {
-      process_started = System.currentTimeMillis();
+      process_start_time = System.currentTimeMillis();
       process = Runtime.getRuntime().exec(command);
     }
 
@@ -48,7 +66,7 @@ public abstract class ShellCommand
   protected final void waitForProcess () throws InterruptedException
   {
     process.waitFor();
-    process_ended = System.currentTimeMillis();
+    process_finish_time = System.currentTimeMillis();
   }
 
   public static Vector<String> getOSPrefix (final String _osname)
@@ -78,7 +96,7 @@ public abstract class ShellCommand
 
   public final double getRuntime ()
   {
-    return (process_ended - process_started) / MICROSECONDS_PER_SECOND;
+    return (process_finish_time - process_start_time) / MICROSECONDS_PER_SECOND;
   }
 
   public final InputStream getStdout ()

@@ -14,15 +14,12 @@ import java.util.Vector;
  */
 public class ShellStreamCommand extends ShellCommand
 {
-  private String command;
-  private InputStream stdin;
   private StreamedString stdout;
   private StreamedString stderr;
 
-  public ShellStreamCommand(final String _command, final InputStream _stdin)
+  public ShellStreamCommand(final String command, final InputStream stdin)
   {
-    command = _command;
-    stdin = _stdin;
+    super(command, stdin);
   }
 
   public void run () throws ShellCommandError
@@ -31,14 +28,14 @@ public class ShellStreamCommand extends ShellCommand
 
     try {
       final Vector<String> full_command = getOSPrefix(System.getProperty("os.name"));
-      full_command.add(command);
+      full_command.add(getCommand());
 
       final String[] c = full_command.toArray(new String[full_command.size()]);
 
       process = startProcess(c);
 
       final OutputStream stdin_stream = process.getOutputStream();
-      StreamSupport.copyStream(stdin, process.getOutputStream());
+      StreamSupport.copyStream(getStdin(), process.getOutputStream());
       stdin_stream.close();
 
       stdout = StreamedString.create(process.getInputStream());

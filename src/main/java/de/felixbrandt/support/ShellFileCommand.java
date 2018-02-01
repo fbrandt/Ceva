@@ -12,15 +12,12 @@ import java.util.Vector;
  */
 public class ShellFileCommand extends ShellCommand
 {
-  private String command;
-  private InputStream stdin;
   private String stdout;
   private String stderr;
 
-  public ShellFileCommand(final String _command, final InputStream _stdin)
+  public ShellFileCommand(final String command, final InputStream stdin)
   {
-    command = _command;
-    stdin = _stdin;
+    super(command, stdin);
   }
 
   public void run () throws ShellCommandError, ShellCommandWarning
@@ -32,7 +29,7 @@ public class ShellFileCommand extends ShellCommand
       File stderr_file = File.createTempFile("ceva", ".stderr");
 
       final Vector<String> full_command = getOSPrefix(System.getProperty("os.name"));
-      full_command.add(command + " >" + stdout_file.getAbsolutePath() + " 2>"
+      full_command.add(getCommand() + " >" + stdout_file.getAbsolutePath() + " 2>"
               + stderr_file.getAbsolutePath());
 
       final String[] c = full_command.toArray(new String[full_command.size()]);
@@ -40,7 +37,7 @@ public class ShellFileCommand extends ShellCommand
       process = startProcess(c);
 
       final OutputStream stdin_stream = process.getOutputStream();
-      StreamSupport.copyStream(stdin, process.getOutputStream());
+      StreamSupport.copyStream(getStdin(), process.getOutputStream());
       stdin_stream.close();
 
       waitForProcess();
