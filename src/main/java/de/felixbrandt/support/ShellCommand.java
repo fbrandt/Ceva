@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Generic base class for executing an external process.
@@ -11,11 +12,14 @@ import java.util.Vector;
 public abstract class ShellCommand
 {
   private static final double MICROSECONDS_PER_SECOND = 1000.0;
+  public static final int TIMELIMIT_EXCEEDED = 124;
   private String command;
   private InputStream stdin;
+  private int timelimit;
   private Process process;
   private long process_start_time;
   private long process_finish_time;
+  private boolean timelimit_exceeded;
 
   public class ShellCommandError extends Exception
   {
@@ -37,10 +41,16 @@ public abstract class ShellCommand
     }
   }
 
-  public ShellCommand(String _command, InputStream _stdin)
+  public ShellCommand(String command, InputStream stdin)
+  {
+    this(command, stdin, 0);
+  }
+
+  public ShellCommand(String _command, InputStream _stdin, int _timelimit)
   {
     command = _command;
     stdin = _stdin;
+    timelimit = _timelimit;
   }
 
   public final String getCommand ()
@@ -63,10 +73,24 @@ public abstract class ShellCommand
     return process;
   }
 
-  protected final void waitForProcess () throws InterruptedException
+  protected final void waitForProcess () throws InterruptedException, ShellCommandWarning
   {
-    process.waitFor();
+    boolean finished = true;
+    if (timelimit == 0) {
+      process.waitFor();
+    } else {
+      finished = process.waitFor(timelimit, TimeUnit.SECONDS);
+    }
     process_finish_time = System.currentTimeMillis();
+
+    if (!finished) {
+      timelimit_exceeded = true;
+      process.destroyForcibly();
+      while (process.isAlive()) {
+        Thread.sleep(100);
+      }
+      throw new ShellCommandWarning("timelimit exceeded");
+    }
   }
 
   public static Vector<String> getOSPrefix (final String _osname)
@@ -87,6 +111,10 @@ public abstract class ShellCommand
 
   public final int getExitCode ()
   {
+    if (timelimit_exceeded) {
+      return TIMELIMIT_EXCEEDED;
+    }
+
     if (process != null) {
       return process.exitValue();
     }

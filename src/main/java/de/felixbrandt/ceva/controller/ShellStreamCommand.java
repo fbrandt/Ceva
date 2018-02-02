@@ -18,6 +18,8 @@ public class ShellStreamCommand extends de.felixbrandt.support.ShellStreamComman
       run();
     } catch (ShellCommandError e) {
       LOGGER.error(e.getMessage());
+    } catch (ShellCommandWarning e) {
+      LOGGER.warn(e.getMessage());
     }
   }
 

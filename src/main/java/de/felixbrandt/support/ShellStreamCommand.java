@@ -22,7 +22,12 @@ public class ShellStreamCommand extends ShellCommand
     super(command, stdin);
   }
 
-  public void run () throws ShellCommandError
+  public ShellStreamCommand(final String command, final InputStream stdin, final int timeout)
+  {
+    super(command, stdin, timeout);
+  }
+
+  public void run () throws ShellCommandError, ShellCommandWarning
   {
     Process process = null;
 

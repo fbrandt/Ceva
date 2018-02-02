@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.felixbrandt.support.ShellCommand.ShellCommandError;
+import de.felixbrandt.support.ShellCommand.ShellCommandWarning;
 
 public class ShellStreamCommandTest
 {
@@ -43,7 +44,7 @@ public class ShellStreamCommandTest
   }
 
   @Test
-  public void testRun () throws ShellCommandError
+  public void testRun () throws ShellCommandError, ShellCommandWarning
   {
     final ShellStreamCommand command = new ShellStreamCommand("echo 1", stdin);
     command.run();
@@ -53,7 +54,7 @@ public class ShellStreamCommandTest
   }
 
   @Test
-  public void testRunFail () throws ShellCommandError
+  public void testRunFail () throws ShellCommandError, ShellCommandWarning
   {
     final ShellStreamCommand command = new ShellStreamCommand("invalidcommand", stdin);
     command.run();
@@ -63,7 +64,7 @@ public class ShellStreamCommandTest
   }
 
   @Test(timeout = 10000)
-  public void testFind () throws FileNotFoundException, ShellCommandError
+  public void testFind () throws FileNotFoundException, ShellCommandError, ShellCommandWarning
   {
     if (!"Linux".equals(System.getProperty("os.name"))) {
       final File file = new File("test/result.log");
@@ -77,7 +78,7 @@ public class ShellStreamCommandTest
   }
 
   @Test
-  public void testGetStderr () throws ShellCommandError
+  public void testGetStderr () throws ShellCommandError, ShellCommandWarning
   {
     final ShellStreamCommand command = new ShellStreamCommand("echo 1 >&2", stdin);
     command.run();
@@ -87,7 +88,7 @@ public class ShellStreamCommandTest
   }
 
   @Test
-  public void testGetExitCode () throws ShellCommandError
+  public void testGetExitCode () throws ShellCommandError, ShellCommandWarning
   {
     final ShellStreamCommand command = new ShellStreamCommand("exit 1", stdin);
     command.run();
@@ -95,7 +96,8 @@ public class ShellStreamCommandTest
   }
 
   @Test(timeout = 5000)
-  public void testRuntime () throws InterruptedException, ShellCommandError
+  public void testRuntime ()
+          throws InterruptedException, ShellCommandError, ShellCommandWarning
   {
     final String osname = System.getProperty("os.name");
     String count_param = "-c";

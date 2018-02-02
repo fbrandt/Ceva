@@ -20,6 +20,11 @@ public class ShellFileCommand extends ShellCommand
     super(command, stdin);
   }
 
+  public ShellFileCommand(final String command, final InputStream stdin, final int timeout)
+  {
+    super(command, stdin, timeout);
+  }
+
   public void run () throws ShellCommandError, ShellCommandWarning
   {
     Process process;
@@ -49,6 +54,7 @@ public class ShellFileCommand extends ShellCommand
         throw new ShellCommandWarning("could not delete output files: " + stdout_file.getName()
                 + " or " + stderr_file.getName());
       }
+
     } catch (final IOException e) {
       process = null;
       throw new ShellCommandError("command failed with: " + e.getMessage());
