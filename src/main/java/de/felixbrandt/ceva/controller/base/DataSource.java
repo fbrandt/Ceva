@@ -20,6 +20,11 @@ public abstract class DataSource
     return getContent(ContentMode.DEFAULT);
   }
 
+  public int getTimelimit ()
+  {
+    return 0;
+  }
+
   public void doneForNow ()
   {
   }

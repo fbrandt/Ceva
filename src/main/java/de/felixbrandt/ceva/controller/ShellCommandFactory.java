@@ -10,8 +10,9 @@ import de.felixbrandt.ceva.controller.base.Command;
 public class ShellCommandFactory extends CommandFactory
 {
   @Override
-  public final Command create (final String command, final InputStream stdin)
+  public final Command create (final String command, final InputStream stdin,
+          final int timelimit)
   {
-    return new ShellFileCommand(command, stdin);
+    return new ShellFileCommand(command, stdin, timelimit);
   }
 }

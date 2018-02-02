@@ -10,7 +10,12 @@ import de.felixbrandt.support.StreamSupport;
  */
 public abstract class CommandFactory
 {
-  public abstract Command create (String command, InputStream stdin);
+  public abstract Command create (String command, InputStream stdin, int timelimit);
+
+  public final Command create (String command, InputStream stdin)
+  {
+    return create(command, stdin, 0);
+  }
 
   public final Command create (final String command)
   {

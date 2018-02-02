@@ -14,7 +14,12 @@ public class ShellFileCommand extends de.felixbrandt.support.ShellFileCommand
 
   public ShellFileCommand(String command, InputStream stdin)
   {
-    super(command, stdin);
+    this(command, stdin, 0);
+  }
+
+  public ShellFileCommand(String command, InputStream stdin, int timelimit)
+  {
+    super(command, stdin, timelimit);
 
     try {
       LOGGER.debug("running command: {}", command);

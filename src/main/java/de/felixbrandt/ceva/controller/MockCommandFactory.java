@@ -20,7 +20,8 @@ public class MockCommandFactory extends CommandFactory
   }
 
   @Override
-  public final Command create (final String command, final InputStream stdin)
+  public final Command create (final String command, final InputStream stdin,
+          final int timelimit)
   {
     last_command_string = command;
     last_input_stream = StreamSupport.getStringFromInputStream(stdin);

@@ -35,7 +35,7 @@ public class CommandController implements Controller
     // token in the run path.
     try {
       final Command command = command_factory.create(executable.getFullRunPath(),
-              source.getContent(executable.getInputMode()));
+              source.getContent(executable.getInputMode()), source.getTimelimit());
 
       // only collect result if command did not fail
       if (command.getExitCode() > -1) {
