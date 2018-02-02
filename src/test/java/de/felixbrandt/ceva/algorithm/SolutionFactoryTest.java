@@ -6,10 +6,7 @@ import static org.junit.Assert.assertFalse;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.felixbrandt.ceva.algorithm.AlgorithmExecutable;
-import de.felixbrandt.ceva.algorithm.SolutionFactory;
 import de.felixbrandt.ceva.controller.MockCommand;
-import de.felixbrandt.ceva.controller.base.Executable;
 import de.felixbrandt.ceva.entity.Algorithm;
 import de.felixbrandt.ceva.entity.Instance;
 import de.felixbrandt.ceva.entity.Solution;
@@ -101,4 +98,11 @@ public class SolutionFactoryTest
     assertFalse(solution.getMachine().equals(""));
   }
 
+  @Test
+  public void testSetExitCode ()
+  {
+    result.setExitcode(124);
+    final Solution solution = (Solution) factory.create(result);
+    assertEquals(124, solution.getExitcode());
+  }
 }

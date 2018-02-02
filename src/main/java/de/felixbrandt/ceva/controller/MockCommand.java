@@ -47,7 +47,7 @@ public class MockCommand implements Command
     return stderr;
   }
 
-  public final int getExitCode ()
+  public final int getExitcode ()
   {
     return exit_code;
   }
@@ -62,7 +62,7 @@ public class MockCommand implements Command
     stderr = output;
   }
 
-  public final void setExitCode (final int code)
+  public final void setExitcode (final int code)
   {
     exit_code = code;
   }

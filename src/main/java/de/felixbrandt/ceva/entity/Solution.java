@@ -16,6 +16,7 @@ public class Solution implements java.io.Serializable
   private String stderr;
   private String machine;
   private double runtime;
+  private int exitcode;
   private String parameters;
 
   public Solution()
@@ -120,6 +121,16 @@ public class Solution implements java.io.Serializable
   public void setRuntime (final double _runtime)
   {
     runtime = _runtime;
+  }
+
+  public int getExitcode ()
+  {
+    return exitcode;
+  }
+
+  public void setExitcode (final int _exitcode)
+  {
+    exitcode = _exitcode;
   }
 
   public String getParameters ()

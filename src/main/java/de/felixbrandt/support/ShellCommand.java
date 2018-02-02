@@ -109,7 +109,7 @@ public abstract class ShellCommand
     return result;
   }
 
-  public final int getExitCode ()
+  public final int getExitcode ()
   {
     if (timelimit_exceeded) {
       return TIMELIMIT_EXCEEDED;

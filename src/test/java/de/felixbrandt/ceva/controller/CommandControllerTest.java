@@ -84,7 +84,7 @@ public class CommandControllerTest
   public void testRunResultFail ()
   {
     command_factory.mock_command.setStdout("STDOUT");
-    command_factory.mock_command.setExitCode(-1);
+    command_factory.mock_command.setExitcode(-1);
     executable.getMockResultFactory().setReturnResult(new Integer(42));
 
     final Object result = controller.run(executable, source);
@@ -105,7 +105,7 @@ public class CommandControllerTest
     executable.getMockResultFactory().setReturnResult(new Integer(42));
 
     command_factory.mock_command.setStdout("STDOUT");
-    command_factory.mock_command.setExitCode(0);
+    command_factory.mock_command.setExitcode(0);
 
     final Object result = controller.run(executable, source);
 

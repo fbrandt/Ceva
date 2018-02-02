@@ -13,25 +13,27 @@ public class Instance implements java.io.Serializable
   private String checksum;
   private String content;
   private boolean active;
+  private int timelimit;
 
   public Instance()
   {
-    this(0, "", "", "", true);
+    this("");
   }
 
   public Instance(final String name)
   {
-    this(0, name, "", "", true);
+    this(0, name, "", "", true, 0);
   }
 
   public Instance(final int _instance, final String _filename, final String _checksum,
-          final String _content, final boolean _active)
+          final String _content, final boolean _active, final int _timelimit)
   {
     instance = _instance;
     filename = _filename;
     checksum = _checksum;
     content = _content;
     active = _active;
+    timelimit = _timelimit;
   }
 
   public int getInstance ()
@@ -82,5 +84,15 @@ public class Instance implements java.io.Serializable
   public void setActive (final boolean state)
   {
     active = state;
+  }
+
+  public void setTimelimit (final int _timelimit)
+  {
+    timelimit = _timelimit;
+  }
+
+  public int getTimelimit ()
+  {
+    return timelimit;
   }
 }

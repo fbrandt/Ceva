@@ -50,7 +50,7 @@ public class ShellStreamCommandTest
     command.run();
     assertEquals(1, Integer.parseInt(command.getStdoutString().trim()));
     assertEquals("", command.getStderrString());
-    assertEquals(0, command.getExitCode());
+    assertEquals(0, command.getExitcode());
   }
 
   @Test
@@ -60,7 +60,7 @@ public class ShellStreamCommandTest
     command.run();
     assertEquals("", command.getStdoutString());
     assertTrue(command.getStderrString().contains("invalidcommand"));
-    assertNotEquals(0, command.getExitCode());
+    assertNotEquals(0, command.getExitcode());
   }
 
   @Test(timeout = 10000)
@@ -84,7 +84,7 @@ public class ShellStreamCommandTest
     command.run();
     assertEquals("", command.getStdoutString());
     assertEquals("1", command.getStderrString().substring(0, 1));
-    assertEquals(0, command.getExitCode());
+    assertEquals(0, command.getExitcode());
   }
 
   @Test
@@ -92,7 +92,7 @@ public class ShellStreamCommandTest
   {
     final ShellStreamCommand command = new ShellStreamCommand("exit 1", stdin);
     command.run();
-    assertEquals(1, command.getExitCode());
+    assertEquals(1, command.getExitcode());
   }
 
   @Test(timeout = 5000)

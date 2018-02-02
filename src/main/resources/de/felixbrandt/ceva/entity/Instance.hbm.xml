@@ -7,5 +7,6 @@
 		<property name="checksum" />
 		<property name="content" type="org.hibernate.type.StringClobType" />
 		<property name="active" />
+		<property name="timelimit" />
 	</class>
 </hibernate-mapping>

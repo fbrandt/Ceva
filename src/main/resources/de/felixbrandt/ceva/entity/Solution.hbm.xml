@@ -14,6 +14,7 @@
 		<property name="stderr" type="org.hibernate.type.StringClobType" />
 		<property name="machine" type="org.hibernate.type.StringClobType" />
 		<property name="runtime" />
+		<property name="exitcode" />
 		<property name="parameters" type="org.hibernate.type.TextType" />
 	</class>
 </hibernate-mapping>

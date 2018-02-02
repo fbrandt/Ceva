@@ -15,7 +15,7 @@ public interface Command
 
   String getStderrString ();
 
-  int getExitCode ();
+  int getExitcode ();
 
   double getRuntime ();
 }

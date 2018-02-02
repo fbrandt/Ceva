@@ -31,7 +31,7 @@ public class ShellFileCommandTest
     command.run();
     assertEquals(1, Integer.parseInt(command.getStdoutString().trim()));
     assertEquals("", command.getStderrString());
-    assertEquals(0, command.getExitCode());
+    assertEquals(0, command.getExitcode());
   }
 
   @Test
@@ -46,7 +46,7 @@ public class ShellFileCommandTest
 
     assertEquals("", command.getStdoutString());
     assertTrue(command.getStderrString().contains("invalidcommand"));
-    assertNotEquals(0, command.getExitCode());
+    assertNotEquals(0, command.getExitcode());
   }
 
   @Test
@@ -54,7 +54,7 @@ public class ShellFileCommandTest
   {
     final ShellFileCommand command = new ShellFileCommand("exit 1", stdin);
     command.run();
-    assertEquals(1, command.getExitCode());
+    assertEquals(1, command.getExitcode());
   }
 
   @Test(timeout = 5000)
@@ -99,7 +99,7 @@ public class ShellFileCommandTest
     }
 
     // use same exit code as linux timeout command
-    assertEquals(ShellCommand.TIMELIMIT_EXCEEDED, command.getExitCode());
+    assertEquals(ShellCommand.TIMELIMIT_EXCEEDED, command.getExitcode());
     assertEquals(3.0, command.getRuntime(), 0.5);
   }
 }

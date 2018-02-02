@@ -61,4 +61,10 @@ public class InstanceSource extends DataSource implements java.io.Serializable
   {
     return instance.getInstance();
   }
+
+  @Override
+  public final int getTimelimit ()
+  {
+    return instance.getTimelimit();
+  }
 }

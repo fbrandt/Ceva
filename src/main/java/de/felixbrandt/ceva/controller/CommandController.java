@@ -38,7 +38,7 @@ public class CommandController implements Controller
               source.getContent(executable.getInputMode()), source.getTimelimit());
 
       // only collect result if command did not fail
-      if (command.getExitCode() > -1) {
+      if (command.getExitcode() > -1) {
         final ResultFactory factory = executable.getResultFactory();
         factory.setSource(source);
         factory.setVersion(version);

@@ -40,6 +40,7 @@ public class SolutionFactory implements ResultFactory
     result.setStdout(StreamSupport.getStringFromInputStream(process.getStdout()));
     result.setStderr(StreamSupport.getStringFromInputStream(process.getStderr()));
     result.setRuntime(process.getRuntime());
+    result.setExitcode(process.getExitcode());
     result.setParameters(executable.getParametersAsString());
 
     try {
