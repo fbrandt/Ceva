@@ -2,6 +2,8 @@ package de.felixbrandt.ceva.gearman;
 
 import java.util.concurrent.ExecutorService;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.gearman.common.GearmanPacketType;
 import org.gearman.common.GearmanSessionEvent;
 import org.gearman.worker.GearmanWorkerImpl;
@@ -12,7 +14,9 @@ import org.gearman.worker.GearmanWorkerImpl;
  */
 public class GearmanWorkerWithTimeout extends GearmanWorkerImpl
 {
-  private long last_job_started;
+  private static final Logger LOGGER = LogManager.getLogger();
+  private long last_packet;
+  private boolean has_job = false;
   private long timeout;
 
   public GearmanWorkerWithTimeout(long timeout_seconds)
@@ -29,31 +33,32 @@ public class GearmanWorkerWithTimeout extends GearmanWorkerImpl
 
   final private void init (long timeout_seconds)
   {
-    last_job_started = System.currentTimeMillis();
+    last_packet = System.currentTimeMillis();
     timeout = timeout_seconds * 1000;
   }
 
   public void handleSessionEvent (GearmanSessionEvent event)
           throws IllegalArgumentException, IllegalStateException
   {
-    GearmanPacketType t = event.getPacket().getPacketType();
-    if (t == GearmanPacketType.JOB_ASSIGN || t == GearmanPacketType.JOB_ASSIGN_UNIQ) {
-      last_job_started = System.currentTimeMillis();
-    }
-
     super.handleSessionEvent(event);
+    updateTimeout(event.getPacket().getPacketType());
+  }
+
+  public void updateTimeout (GearmanPacketType type)
+  {
+    LOGGER.debug("handle Packet of Type {}", type);
+    has_job = type == GearmanPacketType.JOB_ASSIGN
+            || type == GearmanPacketType.JOB_ASSIGN_UNIQ;
+    last_packet = System.currentTimeMillis();
   }
 
   public boolean isRunning ()
   {
-    if (!super.isRunning()) {
-      return false;
-    }
+    return super.isRunning() && !reachedTimeout();
+  }
 
-    if (timeout > 0 && last_job_started + timeout < System.currentTimeMillis()) {
-      return false;
-    }
-
-    return true;
+  public boolean reachedTimeout ()
+  {
+    return timeout > 0 && !has_job && last_packet + timeout < System.currentTimeMillis();
   }
 }
