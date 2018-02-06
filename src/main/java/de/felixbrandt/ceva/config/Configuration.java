@@ -28,6 +28,21 @@ public class Configuration
     params = new ParameterMap((Map<String, ?>) yaml.load(in));
   }
 
+  public final AutoScaleConfiguration getAutoScaleConfig ()
+  {
+    return new AutoScaleConfiguration(getAutoScaleParams());
+  }
+
+  public final ParameterMap getAutoScaleParams ()
+  {
+    return new ParameterMap(doGetAutoScaleParams());
+  }
+
+  public final Map<String, ?> doGetAutoScaleParams ()
+  {
+    return params.getMapParam("autoscale");
+  }
+
   public final DBConfiguration getDatabaseConfig ()
   {
     return new DBConfiguration(getDatabaseParams());
