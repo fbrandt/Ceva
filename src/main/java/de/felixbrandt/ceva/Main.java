@@ -8,6 +8,7 @@ import java.util.Arrays;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.felixbrandt.autoscale.AutoScaleManager;
 import de.felixbrandt.ceva.config.Configuration;
 import de.felixbrandt.ceva.config.QueueConfiguration;
 import de.felixbrandt.ceva.database.HibernateConfigurationBuilder;
@@ -73,8 +74,16 @@ public class Main
 
   public static void runExperiments (final Configuration config)
   {
-    SessionHandler session_handler = null;
+    AutoScaleManager autoscale_manager = null;
+    Thread autoscale_thread = null;
 
+    if (config.getAutoScaleConfig().isActive()) {
+      autoscale_manager = new AutoScaleManager(config.getAutoScaleConfig(),
+              config.getQueueConfig());
+      autoscale_thread = new Thread(autoscale_manager);
+      autoscale_thread.start();
+    }
+    SessionHandler session_handler = null;
     WorkerPool gearman_worker_pool = null;
 
     try {
@@ -117,6 +126,15 @@ public class Main
       e.printStackTrace();
       if (session_handler != null) {
         session_handler.rollback();
+      }
+    }
+
+    if (autoscale_manager != null) {
+      autoscale_manager.stop();
+      try {
+        autoscale_thread.join();
+      } catch (InterruptedException e) {
+        LOGGER.warn(e.getMessage());
       }
     }
   }
