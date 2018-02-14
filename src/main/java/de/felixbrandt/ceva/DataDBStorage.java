@@ -95,7 +95,10 @@ public abstract class DataDBStorage extends DataProvider implements Storage, Uns
     return new HashSet<Integer>(stmt.list());
   }
 
-  public abstract String getTablename (final Metric metric);
+  public String getTablename (final Metric metric)
+  {
+    return metric.getDataEntity();
+  }
 
   public abstract String getSourceObjectName ();
 

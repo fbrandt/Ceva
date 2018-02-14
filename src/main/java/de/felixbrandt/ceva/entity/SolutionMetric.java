@@ -46,4 +46,17 @@ public class SolutionMetric extends Metric
       setMode(from_solution_metric.getMode());
     }
   }
+
+  public final String getDataEntity ()
+  {
+    switch (getType()) {
+    case STRING_METRIC:
+      return "SolutionDataString";
+    case DOUBLE_METRIC:
+      return "SolutionDataDouble";
+    case INT_METRIC:
+    default:
+      return "SolutionDataInteger";
+    }
+  }
 }

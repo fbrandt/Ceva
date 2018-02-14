@@ -49,6 +49,11 @@ public abstract class Metric extends Rule
     type = _type;
   }
 
+  public String getDataEntity ()
+  {
+    throw new RuntimeException("this code must never be reached");
+  }
+
   @Override
   public void updateRuleDetails (final Rule from)
   {

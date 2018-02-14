@@ -17,4 +17,16 @@ public class InstanceMetric extends Metric
     super(name);
   }
 
+  public final String getDataEntity ()
+  {
+    switch (getType()) {
+    case STRING_METRIC:
+      return "InstanceDataString";
+    case DOUBLE_METRIC:
+      return "InstanceDataDouble";
+    case INT_METRIC:
+    default:
+      return "InstanceDataInteger";
+    }
+  }
 }

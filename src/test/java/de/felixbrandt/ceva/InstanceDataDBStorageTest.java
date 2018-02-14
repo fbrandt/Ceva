@@ -16,8 +16,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.felixbrandt.ceva.InstanceDataDBStorage;
-import de.felixbrandt.ceva.TestSessionBuilder;
 import de.felixbrandt.ceva.controller.base.Executable;
 import de.felixbrandt.ceva.database.SessionHandler;
 import de.felixbrandt.ceva.entity.Data;
@@ -271,6 +269,6 @@ public class InstanceDataDBStorageTest
     assertEquals("InstanceDataDouble", storage.getTablename(metric));
 
     SolutionMetric blanc_metric = new SolutionMetric();
-    assertEquals("InstanceDataInteger", storage.getTablename(blanc_metric));
+    assertEquals("SolutionDataInteger", storage.getTablename(blanc_metric));
   }
 }

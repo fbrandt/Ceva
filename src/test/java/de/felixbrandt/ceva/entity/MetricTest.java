@@ -8,11 +8,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.felixbrandt.ceva.entity.Algorithm;
-import de.felixbrandt.ceva.entity.Metric;
-import de.felixbrandt.ceva.entity.MetricType;
-import de.felixbrandt.ceva.entity.Rule;
-
 public class MetricTest
 {
   Metric metric;
