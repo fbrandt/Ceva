@@ -2,6 +2,9 @@ package de.felixbrandt.ceva.config;
 
 import de.felixbrandt.support.ParameterMap;
 
+/**
+ * Configure AWS auto-scaling of remote workers.
+ */
 public class AutoScaleConfiguration
 {
   private boolean is_active;

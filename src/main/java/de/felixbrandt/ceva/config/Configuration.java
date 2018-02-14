@@ -35,12 +35,7 @@ public class Configuration
 
   public final ParameterMap getAutoScaleParams ()
   {
-    return new ParameterMap(doGetAutoScaleParams());
-  }
-
-  public final Map<String, ?> doGetAutoScaleParams ()
-  {
-    return params.getMapParam("autoscale");
+    return new ParameterMap(params.getMapParam("autoscale"));
   }
 
   public final DBConfiguration getDatabaseConfig ()
@@ -50,12 +45,17 @@ public class Configuration
 
   public final ParameterMap getDatabaseParams ()
   {
-    return new ParameterMap(doGetDatabaseParams());
+    return new ParameterMap(params.getMapParam("database"));
   }
 
-  public final Map<String, ?> doGetDatabaseParams ()
+  public final ExecutionConfiguration getExecutionConfig ()
   {
-    return params.getMapParam("database");
+    return new ExecutionConfiguration(getExecutionParams());
+  }
+
+  public final ParameterMap getExecutionParams ()
+  {
+    return new ParameterMap(params.getMapParam("execute"));
   }
 
   public final InstanceConfiguration getInstanceConfig ()
@@ -114,12 +114,7 @@ public class Configuration
 
   public final ParameterMap getQueueParams ()
   {
-    return new ParameterMap(doGetQueueParams());
-  }
-
-  public final Map<String, ?> doGetQueueParams ()
-  {
-    return params.getMapParam("queue");
+    return new ParameterMap(params.getMapParam("queue"));
   }
 
   public final QueueConfiguration getQueueConfig ()

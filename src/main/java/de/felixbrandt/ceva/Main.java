@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.felixbrandt.autoscale.AutoScaleManager;
 import de.felixbrandt.ceva.config.Configuration;
+import de.felixbrandt.ceva.config.ExecutionConfiguration;
 import de.felixbrandt.ceva.config.QueueConfiguration;
 import de.felixbrandt.ceva.database.HibernateConfigurationBuilder;
 import de.felixbrandt.ceva.database.SessionHandler;
@@ -46,6 +47,7 @@ public class Main
     java.util.logging.Logger.getLogger("org.hibernate")
             .setLevel(java.util.logging.Level.SEVERE);
     final Configuration config = new Configuration(config_stream);
+    final ExecutionConfiguration exec_config = config.getExecutionConfig();
 
     if (args.length > 1) {
       final SessionHandler session_handler = setupSessionHandler(config);

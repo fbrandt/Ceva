@@ -119,7 +119,10 @@ public class ParameterMap
   public final List<?> getListParam (final String name, final List<?> default_list)
   {
     if (data.containsKey(name)) {
-      return (List<?>) data.get(name);
+      if (data.get(name) instanceof List) {
+        return (List<?>) data.get(name);
+      }
+      return Arrays.asList(data.get(name));
     }
 
     return default_list;
