@@ -1,5 +1,8 @@
 package de.felixbrandt.ceva;
 
+import java.util.List;
+
+import de.felixbrandt.ceva.config.ExecutionConfiguration;
 import de.felixbrandt.ceva.controller.CommandFactory;
 import de.felixbrandt.ceva.controller.DataSourceFilter;
 import de.felixbrandt.ceva.controller.RunVersionProvider;
@@ -9,6 +12,7 @@ import de.felixbrandt.ceva.database.SessionHandler;
 import de.felixbrandt.ceva.provider.AlgorithmDBProvider;
 import de.felixbrandt.ceva.provider.DataSourceProvider;
 import de.felixbrandt.ceva.provider.ExecutableProvider;
+import de.felixbrandt.ceva.provider.HQLFilter;
 import de.felixbrandt.ceva.provider.InstanceDBProvider;
 import de.felixbrandt.ceva.provider.InstanceMetricDBProvider;
 import de.felixbrandt.ceva.provider.SolutionDBProvider;
@@ -23,11 +27,14 @@ public class ExecutionService
 {
   private final SessionHandler session_handler;
   private final ExecutionStrategy execution_strategy;
+  private final ExecutionConfiguration execution_configuration;
 
-  protected ExecutionService(final SessionHandler handler, final ExecutionStrategy strategy)
+  public ExecutionService(final SessionHandler handler, final ExecutionStrategy strategy,
+          final ExecutionConfiguration config)
   {
     session_handler = handler;
     execution_strategy = strategy;
+    execution_configuration = config;
   }
 
   public final void run ()
@@ -43,9 +50,15 @@ public class ExecutionService
     return new RunVersionProvider(command_factory);
   }
 
-  private final InstanceDBProvider setupInstanceProvider ()
+  private final DataSourceProvider setupInstanceProvider ()
   {
-    return new InstanceDBProvider(session_handler);
+    final InstanceMetricDBProvider instance_metric_provider = new InstanceMetricDBProvider(
+            session_handler);
+    InstanceFilterBuilder filter_builder = new InstanceFilterBuilder(instance_metric_provider);
+    List<HQLFilter> filters = filter_builder
+            .build(execution_configuration.getInstanceFilters());
+
+    return new InstanceDBProvider(session_handler, filters);
   }
 
   private final DataSourceFilter setupUnsolvedFilter (UnsolvedProvider provider)
