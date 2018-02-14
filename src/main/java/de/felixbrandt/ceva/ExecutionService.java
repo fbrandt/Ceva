@@ -13,6 +13,7 @@ import de.felixbrandt.ceva.provider.InstanceDBProvider;
 import de.felixbrandt.ceva.provider.InstanceMetricDBProvider;
 import de.felixbrandt.ceva.provider.SolutionDBProvider;
 import de.felixbrandt.ceva.provider.SolutionMetricDBProvider;
+import de.felixbrandt.ceva.provider.UnsolvedProvider;
 import de.felixbrandt.ceva.storage.base.Storage;
 
 /**
@@ -42,26 +43,32 @@ public class ExecutionService
     return new RunVersionProvider(command_factory);
   }
 
+  private final InstanceDBProvider setupInstanceProvider ()
+  {
+    return new InstanceDBProvider(session_handler);
+  }
+
+  private final DataSourceFilter setupUnsolvedFilter (UnsolvedProvider provider)
+  {
+    return new UnsolvedSourcesFilter(provider, setupVersionProvider());
+  }
+
   public final void runAlgorithms ()
   {
     final AlgorithmDBProvider executables = new AlgorithmDBProvider(session_handler);
-    final InstanceDBProvider sources = new InstanceDBProvider(session_handler);
     final SolutionDBStorage solution_storage = new SolutionDBStorage(session_handler);
-    final DataSourceFilter filter = new UnsolvedSourcesFilter(solution_storage,
-            setupVersionProvider());
 
-    doRun(executables, sources, solution_storage, filter);
+    doRun(executables, setupInstanceProvider(), solution_storage,
+            setupUnsolvedFilter(solution_storage));
   }
 
   public final void runInstanceData ()
   {
     final InstanceMetricDBProvider executables = new InstanceMetricDBProvider(session_handler);
-    final InstanceDBProvider sources = new InstanceDBProvider(session_handler);
     final DataDBStorage data_storage = new InstanceDataDBStorage(session_handler);
-    final DataSourceFilter filter = new UnsolvedSourcesFilter(data_storage,
-            setupVersionProvider());
 
-    doRun(executables, sources, data_storage, filter);
+    doRun(executables, setupInstanceProvider(), data_storage,
+            setupUnsolvedFilter(data_storage));
   }
 
   public final void runSolutionData ()
@@ -69,10 +76,8 @@ public class ExecutionService
     final SolutionMetricDBProvider executables = new SolutionMetricDBProvider(session_handler);
     final SolutionDBProvider sources = new SolutionDBProvider(session_handler);
     final DataDBStorage data_storage = new SolutionDataDBStorage(session_handler);
-    final DataSourceFilter filter = new UnsolvedSourcesFilter(data_storage,
-            setupVersionProvider());
 
-    doRun(executables, sources, data_storage, filter);
+    doRun(executables, sources, data_storage, setupUnsolvedFilter(data_storage));
   }
 
   public final void doRun (final ExecutableProvider executable_provider,
