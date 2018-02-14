@@ -40,7 +40,7 @@ public class ParameterMap
   public final String getStringParam (final String name, final String default_value)
   {
     if (data.containsKey(name)) {
-      return (String) data.get(name);
+      return String.valueOf(data.get(name));
     }
 
     return default_value;
