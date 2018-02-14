@@ -1,6 +1,8 @@
 package de.felixbrandt.ceva.provider;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.hibernate.Query;
 
@@ -15,10 +17,17 @@ import de.felixbrandt.ceva.metric.InstanceSource;
 public class InstanceDBProvider implements DataSourceProvider, InstanceProvider
 {
   private SessionHandler session_handler;
+  private List<HQLFilter> instance_filters;
 
   public InstanceDBProvider(final SessionHandler handler)
   {
+    this(handler, new ArrayList<HQLFilter>());
+  }
+
+  public InstanceDBProvider(final SessionHandler handler, List<HQLFilter> filters)
+  {
     session_handler = handler;
+    instance_filters = filters;
   }
 
   public final Collection<? extends DataSource> getDataSources ()
@@ -28,7 +37,29 @@ public class InstanceDBProvider implements DataSourceProvider, InstanceProvider
 
   public final Collection<Instance> getInstances (final SessionHandler handler)
   {
-    return handler.getSession().createQuery("from Instance where active = true").list();
+    String query = "from Instance WHERE active = true";
+
+    int prefix = 1;
+    for (HQLFilter filter : instance_filters) {
+      if (filter != null) {
+        query = query + " " + filter.getWhereClause(Integer.toString(prefix));
+        prefix += 1;
+      }
+    }
+
+    final Query stmt = handler.getSession().createQuery(query);
+
+    prefix = 1;
+    for (HQLFilter filter : instance_filters) {
+      if (filter != null) {
+        filter.setParameters(stmt, Integer.toString(prefix));
+        prefix += 1;
+      }
+    }
+
+    Collection<Instance> result = stmt.list();
+
+    return result;
   }
 
   public final Collection<Instance> findByKeyword (final String keyword)
