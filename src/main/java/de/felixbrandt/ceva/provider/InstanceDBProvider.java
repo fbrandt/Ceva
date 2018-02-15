@@ -52,7 +52,7 @@ public class InstanceDBProvider implements DataSourceProvider, InstanceProvider
     prefix = 1;
     for (HQLFilter filter : instance_filters) {
       if (filter != null) {
-        filter.setParameters(stmt, Integer.toString(prefix));
+        filter.setParametersToQuery(stmt, Integer.toString(prefix));
         prefix += 1;
       }
     }

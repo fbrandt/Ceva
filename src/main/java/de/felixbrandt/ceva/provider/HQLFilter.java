@@ -21,7 +21,7 @@ public class HQLFilter
    * @param prefix Unique identifier for this filter (to avoid column and parameter name
    *          clashes with other filters)
    */
-  void setParameters (Query query, String prefix)
+  void setParametersToQuery (Query query, String prefix)
   {
   }
 
