@@ -11,7 +11,7 @@ import de.felixbrandt.support.ParameterMap;
  */
 public class ExecutionConfiguration
 {
-  private List<InstanceFilterConfiguration> instance_filters;
+  private ParameterMap params;
 
   public ExecutionConfiguration()
   {
@@ -25,7 +25,7 @@ public class ExecutionConfiguration
 
   private final void init (final ParameterMap params)
   {
-    instance_filters = createInstanceFilters(params.getListParam("instances"));
+    this.params = params;
   }
 
   public final List<InstanceFilterConfiguration> createInstanceFilters (final List<?> filters)
@@ -33,8 +33,10 @@ public class ExecutionConfiguration
     List<InstanceFilterConfiguration> instance_filters = new ArrayList<InstanceFilterConfiguration>();
 
     for (Object filter : filters) {
-      final ParameterMap params = new ParameterMap((Map<String, ?>) filter);
-      instance_filters.add(createInstanceFilter(params));
+      if (filter != null) {
+        final ParameterMap params = new ParameterMap((Map<String, ?>) filter);
+        instance_filters.add(createInstanceFilter(params));
+      }
     }
 
     return instance_filters;
@@ -56,6 +58,32 @@ public class ExecutionConfiguration
 
   public final List<InstanceFilterConfiguration> getInstanceFilters ()
   {
-    return instance_filters;
+    return createInstanceFilters(params.getListParam("instances"));
+  }
+
+  public final RuleExecutionConfiguration getRuleConfiguration (final ParameterMap params,
+          String key)
+  {
+    if (params.isMapParam(key)) {
+      return new RuleExecutionConfiguration(true, params.getMapParam(key));
+    }
+
+    boolean active = params.getBoolParam(key, true);
+    return new RuleExecutionConfiguration(active);
+  }
+
+  public RuleExecutionConfiguration getInstanceMetricConfiguration ()
+  {
+    return getRuleConfiguration(params, "imetrics");
+  }
+
+  public RuleExecutionConfiguration getAlgorithmConfiguration ()
+  {
+    return getRuleConfiguration(params, "algorithms");
+  }
+
+  public RuleExecutionConfiguration getSolutionMetricConfiguration ()
+  {
+    return getRuleConfiguration(params, "smetrics");
   }
 }

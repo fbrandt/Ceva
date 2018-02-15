@@ -27,7 +27,7 @@ public class ExecutionConfigurationTest
   {
     data = new HashMap<String, Object>();
     params = new ParameterMap(data);
-    config = new ExecutionConfiguration();
+    config = new ExecutionConfiguration(params);
   }
 
   @Test
@@ -59,11 +59,10 @@ public class ExecutionConfigurationTest
   @Test
   public void testInstances ()
   {
-    List<String> filters = new ArrayList<String>();
-    filters.add(null);
-    filters.add(null);
+    List<Object> filters = new ArrayList<Object>();
+    filters.add(new HashMap<String, String>());
+    filters.add(new HashMap<String, String>());
     data.put("instances", filters);
-    config = new ExecutionConfiguration(params);
     assertEquals(2, config.getInstanceFilters().size());
   }
 
@@ -140,5 +139,61 @@ public class ExecutionConfigurationTest
     assertEquals(2, ((MetricMatchInstanceFilterConfiguration) filter).getValues().size());
     assertEquals("1", ((MetricMatchInstanceFilterConfiguration) filter).getValues().get(0));
     assertEquals("2", ((MetricMatchInstanceFilterConfiguration) filter).getValues().get(1));
+  }
+
+  @Test
+  public void testCreateRuleExecutionConfigurationDefault ()
+  {
+    RuleExecutionConfiguration rule_config = config.getRuleConfiguration(new ParameterMap(),
+            "ruletype");
+    assertEquals(true, rule_config.isActive());
+  }
+
+  @Test
+  public void testCreateRuleExecutionConfigurationFalse ()
+  {
+    data.put("ruletype", "false");
+    RuleExecutionConfiguration rule_config = config.getRuleConfiguration(params, "ruletype");
+    assertEquals(false, rule_config.isActive());
+  }
+
+  @Test
+  public void testCreateRuleExecutionConfigurationTrue ()
+  {
+    data.put("ruletype", "true");
+    RuleExecutionConfiguration rule_config = config.getRuleConfiguration(params, "ruletype");
+    assertEquals(true, rule_config.isActive());
+  }
+
+  @Test
+  public void testCreateRuleExecutionConfigurationDetailedConfig ()
+  {
+    data.put("ruletype", new HashMap<String, String>());
+    RuleExecutionConfiguration rule_config = config.getRuleConfiguration(params, "ruletype");
+    assertEquals(true, rule_config.isActive());
+  }
+
+  @Test
+  public void testInstanceMetricExecutionConfiguration ()
+  {
+    data.put("imetrics", "false");
+    RuleExecutionConfiguration rule_config = config.getInstanceMetricConfiguration();
+    assertEquals(false, rule_config.isActive());
+  }
+
+  @Test
+  public void testAlgorithmExecutionConfiguration ()
+  {
+    data.put("algorithms", "false");
+    RuleExecutionConfiguration rule_config = config.getAlgorithmConfiguration();
+    assertEquals(false, rule_config.isActive());
+  }
+
+  @Test
+  public void testSolutionMetricExecutionConfiguration ()
+  {
+    data.put("smetrics", "false");
+    RuleExecutionConfiguration rule_config = config.getSolutionMetricConfiguration();
+    assertEquals(false, rule_config.isActive());
   }
 }

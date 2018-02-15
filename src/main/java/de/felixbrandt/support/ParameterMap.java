@@ -152,4 +152,9 @@ public class ParameterMap
   {
     return data.keySet();
   }
+
+  public boolean isMapParam (String key)
+  {
+    return data.containsKey(key) && data.get(key) instanceof Map;
+  }
 }
