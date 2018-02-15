@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Parameter container with supporting types and default options.
@@ -30,6 +31,15 @@ public class ParameterMap
   public final int size ()
   {
     return data.size();
+  }
+
+  @Override
+  public boolean equals (Object other)
+  {
+    if (other instanceof ParameterMap) {
+      return data.equals(((ParameterMap) other).data);
+    }
+    return false;
   }
 
   public final String getStringParam (final String name)
@@ -84,12 +94,12 @@ public class ParameterMap
     return default_value;
   }
 
-  public final Map<String, ?> getMapParam (final String name)
+  public final ParameterMap getMapParam (final String name)
   {
-    return getMapParam(name, new HashMap<String, Object>());
+    return getMapParam(name, new ParameterMap());
   }
 
-  public final Map<String, ?> getMapParam (final String name, final Map<String, ?> default_map)
+  public final ParameterMap getMapParam (final String name, final ParameterMap default_map)
   {
     if (data.containsKey(name)) {
       final Object value = data.get(name);
@@ -103,9 +113,9 @@ public class ParameterMap
           String[] key_value = pair.split(":");
           result.put(key_value[0], Arrays.asList(key_value[1].split(",")));
         }
-        return result;
+        return new ParameterMap(result);
       }
-      return (Map<String, ?>) data.get(name);
+      return new ParameterMap((Map<String, ?>) data.get(name));
     }
 
     return default_map;
@@ -131,5 +141,15 @@ public class ParameterMap
   public final boolean has (final String key)
   {
     return data.containsKey(key);
+  }
+
+  public final Map<String, ?> getRaw ()
+  {
+    return data;
+  }
+
+  public final Set<String> keySet ()
+  {
+    return data.keySet();
   }
 }

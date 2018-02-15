@@ -47,7 +47,8 @@ public class AlgorithmFactory extends RuleFactory
   public final void initParameters (final Algorithm algo, final ParameterMap params)
   {
     if (params != null) {
-      algo.setParameters((HashMap<String, List<String>>) params.getMapParam("parameters"));
+      algo.setParameters(
+              (HashMap<String, List<String>>) params.getMapParam("parameters").getRaw());
     }
 
   }

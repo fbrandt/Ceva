@@ -5,14 +5,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import de.felixbrandt.ceva.config.Configuration;
-import de.felixbrandt.ceva.config.InstanceConfiguration;
-import de.felixbrandt.ceva.config.RuleConfiguration;
 import de.felixbrandt.ceva.entity.AlgorithmFactory;
 import de.felixbrandt.ceva.entity.InstanceMetricFactory;
 import de.felixbrandt.ceva.entity.SolutionMetricFactory;
@@ -115,7 +111,7 @@ public class ConfigurationTest
     final InputStream stream = StreamSupport
             .createInputStream("imetrics:\n  rulename: \n    base_path: /\n");
     config = new Configuration(stream);
-    final Map data = config.getInstanceMetricParams();
+    final ParameterMap data = config.getInstanceMetricParams();
     assertEquals(1, data.size());
   }
 
@@ -137,7 +133,7 @@ public class ConfigurationTest
     final InputStream stream = StreamSupport
             .createInputStream("algorithms:\n  rulename: \n    base_path: /\n");
     config = new Configuration(stream);
-    final Map data = config.getAlgorithmParams();
+    final ParameterMap data = config.getAlgorithmParams();
     assertEquals(1, data.size());
   }
 
@@ -159,7 +155,7 @@ public class ConfigurationTest
     final InputStream stream = StreamSupport
             .createInputStream("smetrics:\n  rulename: \n    base_path: /\n");
     config = new Configuration(stream);
-    final Map data = config.getSolutionMetricParams();
+    final ParameterMap data = config.getSolutionMetricParams();
     assertEquals(1, data.size());
   }
 
@@ -169,7 +165,7 @@ public class ConfigurationTest
     final InputStream stream = StreamSupport
             .createInputStream("ometrics:\n  rulename: \n    base_path: /\n");
     config = new Configuration(stream);
-    final Map data = config.getSolutionMetricParams();
+    final ParameterMap data = config.getSolutionMetricParams();
     assertEquals(1, data.size());
   }
 

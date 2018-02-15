@@ -11,8 +11,6 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.felixbrandt.support.ParameterMap;
-
 public class ParameterMapTest
 {
   HashMap data;
@@ -82,7 +80,7 @@ public class ParameterMapTest
   {
     final Map mymap = new HashMap();
     data.put("key", mymap);
-    assertEquals(mymap, params.getMapParam("key"));
+    assertEquals(new ParameterMap(mymap), params.getMapParam("key"));
   }
 
   @Test
@@ -91,16 +89,18 @@ public class ParameterMapTest
     final String entries = "entrieA:valA\nentrieB:valB1,valB2";
     data.put("mymap", entries);
     assertEquals(2, params.getMapParam("mymap").size());
-    assertEquals(Arrays.asList("valA"), params.getMapParam("mymap").get("entrieA"));
-    assertEquals(Arrays.asList("valB1", "valB2"), params.getMapParam("mymap").get("entrieB"));
+    assertEquals(Arrays.asList("valA"), params.getMapParam("mymap").getListParam("entrieA"));
+    assertEquals(Arrays.asList("valB1", "valB2"),
+            params.getMapParam("mymap").getListParam("entrieB"));
   }
 
   @Test
   public void testGetMapParamDefault ()
   {
-    final Map mymap = new HashMap();
+    Map<String, String> data = new HashMap<String, String>();
+    final ParameterMap mymap = new ParameterMap(data);
     assertEquals(mymap, params.getMapParam("key"));
-    mymap.put("key", "value");
+    data.put("key", "value");
     assertEquals(mymap, params.getMapParam("key", mymap));
   }
 

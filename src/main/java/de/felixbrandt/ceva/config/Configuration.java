@@ -35,7 +35,7 @@ public class Configuration
 
   public final ParameterMap getAutoScaleParams ()
   {
-    return new ParameterMap(params.getMapParam("autoscale"));
+    return params.getMapParam("autoscale");
   }
 
   public final DBConfiguration getDatabaseConfig ()
@@ -45,7 +45,7 @@ public class Configuration
 
   public final ParameterMap getDatabaseParams ()
   {
-    return new ParameterMap(params.getMapParam("database"));
+    return params.getMapParam("database");
   }
 
   public final ExecutionConfiguration getExecutionConfig ()
@@ -55,7 +55,7 @@ public class Configuration
 
   public final ParameterMap getExecutionParams ()
   {
-    return new ParameterMap(params.getMapParam("execute"));
+    return params.getMapParam("execute");
   }
 
   public final InstanceConfiguration getInstanceConfig ()
@@ -70,39 +70,39 @@ public class Configuration
 
   public final RuleConfiguration getInstanceMetrics ()
   {
-    final Map<String, ?> metric_params = getInstanceMetricParams();
+    final ParameterMap metric_params = getInstanceMetricParams();
     LOGGER.debug("found " + metric_params.size() + " instance metrics in configuration");
 
-    return new RuleConfiguration(new InstanceMetricFactory(), metric_params);
+    return new RuleConfiguration(new InstanceMetricFactory(), metric_params.getRaw());
   }
 
-  public final Map<String, ?> getInstanceMetricParams ()
+  public final ParameterMap getInstanceMetricParams ()
   {
     return params.getMapParam("imetrics");
   }
 
   public final RuleConfiguration getAlgorithms ()
   {
-    final Map<String, ?> algo_params = getAlgorithmParams();
+    final ParameterMap algo_params = getAlgorithmParams();
     LOGGER.debug("found " + algo_params.size() + " algorithms in configuration");
 
-    return new RuleConfiguration(new AlgorithmFactory(), algo_params);
+    return new RuleConfiguration(new AlgorithmFactory(), algo_params.getRaw());
   }
 
-  public final Map<String, ?> getAlgorithmParams ()
+  public final ParameterMap getAlgorithmParams ()
   {
     return params.getMapParam("algorithms");
   }
 
   public final RuleConfiguration getSolutionMetrics ()
   {
-    final Map<String, ?> metric_params = getSolutionMetricParams();
+    final ParameterMap metric_params = getSolutionMetricParams();
     LOGGER.debug("found " + metric_params.size() + " solution metrics in configuration");
 
-    return new RuleConfiguration(new SolutionMetricFactory(), metric_params);
+    return new RuleConfiguration(new SolutionMetricFactory(), metric_params.getRaw());
   }
 
-  public final Map<String, ?> getSolutionMetricParams ()
+  public final ParameterMap getSolutionMetricParams ()
   {
     if (params.has("smetrics")) {
       return params.getMapParam("smetrics");
@@ -114,7 +114,7 @@ public class Configuration
 
   public final ParameterMap getQueueParams ()
   {
-    return new ParameterMap(params.getMapParam("queue"));
+    return params.getMapParam("queue");
   }
 
   public final QueueConfiguration getQueueConfig ()
