@@ -9,10 +9,10 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.felixbrandt.ceva.config.RuleConfiguration;
 import de.felixbrandt.ceva.entity.Algorithm;
 import de.felixbrandt.ceva.entity.AlgorithmFactory;
 import de.felixbrandt.ceva.entity.Rule;
+import de.felixbrandt.support.ParameterMap;
 
 public class RuleConfigurationTest
 {
@@ -28,13 +28,13 @@ public class RuleConfigurationTest
     rule_map = new HashMap<String, Map<String, String>>();
     rule_map.put("rulekey", rule);
 
-    rule_config = new RuleConfiguration(new AlgorithmFactory(), rule_map);
+    rule_config = new RuleConfiguration(new AlgorithmFactory(), new ParameterMap(rule_map));
   }
 
   @Test
   public void testGenerateRule ()
   {
-    final Rule result = rule_config.generateRule("rulekey", rule);
+    final Rule result = rule_config.generateRule("rulekey", new ParameterMap(rule));
     assertEquals(Algorithm.class, result.getClass());
     assertEquals("rulekey", result.getName());
     assertEquals("ruledesc", result.getDescription());

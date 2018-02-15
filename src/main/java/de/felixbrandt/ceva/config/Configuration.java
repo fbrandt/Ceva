@@ -73,7 +73,7 @@ public class Configuration
     final ParameterMap metric_params = getInstanceMetricParams();
     LOGGER.debug("found " + metric_params.size() + " instance metrics in configuration");
 
-    return new RuleConfiguration(new InstanceMetricFactory(), metric_params.getRaw());
+    return new RuleConfiguration(new InstanceMetricFactory(), metric_params);
   }
 
   public final ParameterMap getInstanceMetricParams ()
@@ -86,7 +86,7 @@ public class Configuration
     final ParameterMap algo_params = getAlgorithmParams();
     LOGGER.debug("found " + algo_params.size() + " algorithms in configuration");
 
-    return new RuleConfiguration(new AlgorithmFactory(), algo_params.getRaw());
+    return new RuleConfiguration(new AlgorithmFactory(), algo_params);
   }
 
   public final ParameterMap getAlgorithmParams ()
@@ -99,7 +99,7 @@ public class Configuration
     final ParameterMap metric_params = getSolutionMetricParams();
     LOGGER.debug("found " + metric_params.size() + " solution metrics in configuration");
 
-    return new RuleConfiguration(new SolutionMetricFactory(), metric_params.getRaw());
+    return new RuleConfiguration(new SolutionMetricFactory(), metric_params);
   }
 
   public final ParameterMap getSolutionMetricParams ()
