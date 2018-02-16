@@ -10,15 +10,14 @@ import de.felixbrandt.ceva.config.QueueConfiguration;
 
 public class AutoScaleManager implements Runnable
 {
-  private AutoScaleConfiguration scale_config;
   private InstanceManager instance_manager;
   private ScalingPolicy policy;
+  private int check_interval;
   private boolean stop = false;
 
-  public AutoScaleManager(AutoScaleConfiguration _scale_config,
-          QueueConfiguration queue_config)
+  public AutoScaleManager(AutoScaleConfiguration scale_config, QueueConfiguration queue_config)
   {
-    scale_config = _scale_config;
+    check_interval = scale_config.getCheckInterval();
 
     Sensor queue_sensor = new GearmanQueueLengthSensor(queue_config.getHost(),
             queue_config.getPort(), queue_config.getJobQueueName());
@@ -29,13 +28,14 @@ public class AutoScaleManager implements Runnable
             .withCredentials(new AWSStaticCredentialsProvider(aws_credentials))
             .withRegion(scale_config.getAWSRegion()).build();
 
-    String user_data = "";
+    String user_data = assembleUserData(scale_config, queue_config);
 
     instance_manager = new InstanceManager(aws_client, scale_config.getImageId(),
             scale_config.getInstanceType(), scale_config.getKeyName(),
             scale_config.getSecurityGroup(), user_data);
 
-    policy = new ScalingPolicy(queue_sensor, instance_manager, scale_config.getMaxSize());
+    policy = new ScalingPolicy(queue_sensor, instance_manager, scale_config.getStartSize(),
+            scale_config.getFactor(), scale_config.getMaxSize(), scale_config.getStep());
   }
 
   public void stop ()
@@ -48,11 +48,56 @@ public class AutoScaleManager implements Runnable
     while (!stop) {
       policy.check();
       try {
-        Thread.sleep(scale_config.getCheckInterval() * 1000);
+        Thread.sleep(check_interval * 1000);
       } catch (InterruptedException e) {
         // do nothing
       }
     }
     instance_manager.stopAll();
+  }
+
+  public String assembleUserData (AutoScaleConfiguration scale_config,
+          QueueConfiguration queue_config)
+  {
+    StringBuilder sb = new StringBuilder();
+    sb.append("#!/bin/bash\n");
+
+    if (scale_config.getAWSFilesystem() != null) {
+      sb.append("mkdir -p /data\n");
+      sb.append(
+              "mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 "
+                      + scale_config.getAWSFilesystem() + ":/ /data\n");
+      sb.append("cd /data\n");
+    }
+
+    if (scale_config.getAWSCommand() != null) {
+      sb.append(scale_config.getAWSCommand());
+    }
+
+    if (scale_config.getAWSRunCeva()) {
+      sb.append("echo \"queue:\n");
+      sb.append("  mode: slave\n");
+      sb.append("  host: " + queue_config.getHost() + "\n");
+      sb.append("  port: " + queue_config.getPort() + "\n");
+      sb.append("  job_queue: " + queue_config.getJobQueueName() + "\n");
+      sb.append("  worker: " + scale_config.getWorkersPerInstance() + "\n");
+      if (scale_config.getIdleTimeout() > 0) {
+        sb.append("  idle_timeout: " + scale_config.getIdleTimeout() + "\n");
+      }
+      sb.append("\" >> /tmp/ceva.slave.yml\n");
+
+      sb.append("echo \"running CEVA with config\"\n");
+      sb.append("cat /tmp/ceva.slave.yml\n");
+      sb.append("java -jar ceva.jar /tmp/ceva.slave.yml\n");
+    }
+
+    if (scale_config.getAWSAutoShutdown()) {
+      sb.append("echo \"shutting down VM\"\n");
+      sb.append("shutdown -h\n");
+    }
+
+    sb.append("echo \"continue cloud init\"");
+
+    return sb.toString();
   }
 }

@@ -48,6 +48,9 @@ public class GearmanQueueLengthSensor implements Sensor
     for (int reconnect = 0; reconnect < max_reconnect; reconnect++) {
       try {
         String line;
+        if (out == null) {
+          throw new IOException("not connected");
+        }
         out.println("status");
         while (!(line = in.readLine()).equals(".")) {
           if (line.matches(gearman_queue + "(.*)")) {

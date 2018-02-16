@@ -15,6 +15,13 @@ public class AutoScaleConfiguration
   private String instance_type;
   private String key_name;
   private String security_group;
+  private String aws_filesystem;
+  private String aws_command;
+  private int workers_per_instance;
+  private int idle_timeout;
+  private boolean aws_run_ceva;
+  private boolean aws_auto_shutdown;
+
   private int start_size;
   private int max_size;
   private int step;
@@ -41,12 +48,17 @@ public class AutoScaleConfiguration
     instance_type = params.getStringParam("instance_type", "t2.micro");
     key_name = params.getStringParam("key_name", "");
     security_group = params.getStringParam("security_group", "default");
-
-    start_size = params.getIntParam("start_size", 0);
+    aws_filesystem = params.getStringParam("aws_filesystem", null);
+    aws_command = params.getStringParam("aws_command", null);
+    workers_per_instance = params.getIntParam("workers_per_instance", 1);
+    idle_timeout = params.getIntParam("idle_timeout", 3600);
+    aws_run_ceva = params.getBoolParam("aws_run_ceva", true);
+    aws_auto_shutdown = params.getBoolParam("aws_auto_shutdown", true);
+    start_size = params.getIntParam("start_size", 1);
     max_size = params.getIntParam("max_size", 1);
     step = params.getIntParam("step", 1);
-    factor = params.getIntParam("factor", 0);
-    check_interval = params.getIntParam("check_interval", 60);
+    factor = params.getIntParam("factor", 1);
+    check_interval = params.getIntParam("check_interval", 10);
   }
 
   public boolean isActive ()
@@ -177,5 +189,35 @@ public class AutoScaleConfiguration
   public void setCheckInterval (int check_interval)
   {
     this.check_interval = check_interval;
+  }
+
+  public String getAWSFilesystem ()
+  {
+    return aws_filesystem;
+  }
+
+  public int getWorkersPerInstance ()
+  {
+    return workers_per_instance;
+  }
+
+  public int getIdleTimeout ()
+  {
+    return idle_timeout;
+  }
+
+  public String getAWSCommand ()
+  {
+    return aws_command;
+  }
+
+  public boolean getAWSRunCeva ()
+  {
+    return aws_run_ceva;
+  }
+
+  public boolean getAWSAutoShutdown ()
+  {
+    return aws_auto_shutdown;
   }
 }
