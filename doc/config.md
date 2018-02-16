@@ -195,9 +195,9 @@ smetrics:
 
 # Execution Configuration
 
-By default CEVA calculates all missing solutions and metric values on all instances and solutions when it is started. But, CEVA can be configured to only check certain metrics, algorithms, or instances. Active instances can be filtered by their instance metric values. The metrics and algorithms themselves can be toggled on and off via whitelists/blacklists.
+By default CEVA calculates all missing solutions and metric values on all instances and solutions when it is started. But, CEVA can be configured to only check certain metrics, algorithms, or instances. Active instances can be filtered by their instance metric values. The metrics and algorithms themselves can be toggled on and off via whitelists/blacklists. The execution configuration is not placed in the CEVA database and needs to be given via the configuration script on each CEVA run.
 
-## Active Instances
+## Active instances
 
 To only consider instances with a certain metric value during a CEVA run, just set the following filter:
 ```
@@ -232,4 +232,28 @@ execute:
       contains: "tag-A"
     - metric: hardproblem
       value: 1
+```
+
+## Active algorithms and metrics
+
+Enabling only certain algorithms or metrics in a CEVA run works via the `imetrics`, `algorithms`, and `smetrics` attributes of the `execute` config path. By default all categories (algorithms and metrics) are run. To skip a certain category completely, just set it to false:
+```
+execute:
+  algorithms: false
+```
+
+To run only specific algorithms/metrics list them under the `include` attribute:
+```
+execute:
+  imetrics:
+    include:
+      - myactivemetric
+```
+
+Similarly, certain algorithms/metrics can be blacklisted with the `exclude` attribute:
+```
+execute:
+  smetrics:
+    exclude:
+      - myinactivemetric
 ```
