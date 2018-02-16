@@ -16,7 +16,7 @@ public class RuleExecutionConfiguration
 
   public RuleExecutionConfiguration(boolean is_active)
   {
-    this(is_active, null);
+    this(is_active, new ParameterMap());
   }
 
   public RuleExecutionConfiguration(boolean is_active, ParameterMap params)

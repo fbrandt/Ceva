@@ -15,7 +15,7 @@ public class ExecutionConfiguration
 
   public ExecutionConfiguration()
   {
-    init(new ParameterMap(null));
+    init(new ParameterMap());
   }
 
   public ExecutionConfiguration(final ParameterMap params)
