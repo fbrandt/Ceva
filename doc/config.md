@@ -212,7 +212,7 @@ To filter for a set of values, use the `values` attribute:
 execute:
   instances:
     - metric: metricname
-      value: ["tag-A", "tag-B"]
+      values: ["tag-A", "tag-B"]
 ```
 
 The filter works for all types of instance metrics. For metrics of type string, there is also a filter that matches against the given string. The `contains` attribute can also take a set of patterns to match and each instance matching any pattern is used. 
@@ -229,7 +229,7 @@ There can also be multiple filters. In this case only instances passing all filt
 execute:
   instances:
     - metric: metricname
-      contains: "tag-A"
+      contains: ["tag-A", "tag-B"]
     - metric: hardproblem
       value: 1
 ```
