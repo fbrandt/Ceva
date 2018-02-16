@@ -28,6 +28,16 @@ public class ExecutableFilter implements ExecutableProvider
     this.blacklist = blacklist;
   }
 
+  public final List<String> getWhitelist ()
+  {
+    return whitelist;
+  }
+
+  public final List<String> getBlacklist ()
+  {
+    return blacklist;
+  }
+
   public final Collection<? extends Executable> getExecutables ()
   {
     Collection<? extends Executable> result = wrapped_provider.getExecutables();
