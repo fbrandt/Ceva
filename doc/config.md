@@ -11,12 +11,13 @@ Configuration details not related to the experiment data, like the database conn
 
   * [A full example](#full-example)
   * [Database Configuration](#database-configuration)
-  * [Execution Workers](#execution-workers)
+  * [Worker Configuration](#worker-configuration)
   * [Instance Configuration](#instance-configuration)
   * [Instance Metric Configuration](#instance-metric-configuration)
   * [Algorithm Configuration](#algorithm-configuration)
   * [Solution Metric Configuration](#solution-metric-configuration)
-
+  * [Execution Configuration](#execution-configuration)
+  
 # Full example
 ```
 database:
@@ -70,7 +71,7 @@ database:
   password: secretkey
 ```
 
-# Execution Workers
+# Worker Configuration
 
 By default CEVA executes all experiments and metrics with one worker on the local machine one after another. But, experiments and metrics can also be run in parallel, either on the local machine or distributed via a [Gearman](http://gearman.org/) job server. Therefore, the number of workers in a CEVA instance can be configured with the `worker` parameter. In the distributed case, you need to start a CEVA instance on each host and set the `mode` parameter. There needs to be a single CEVA instance in mode `master` that manages the database and submits the jobs which need to be done into a job queue. On the other end multiple CEVA instances in mode `slave` run the jobs and submit the results back to the master instance. Both master and slave instances can run multiple worker threads to do the work. If no Gearman `host` attribute is given, only workers of the local CEVA instance will execute the jobs. 
 
@@ -176,7 +177,7 @@ In YAML, there are two possible notations for lists. The first one is to use squ
 
 # Solution Metric Configuration
 
-CEVA imports the list of solution metrics from the `smetrics` parameter. The parameters and behaviour are equal to the [Instance Metric Configuration](#instance-metric-configuration). The only execption is the additional `input` parameter to determine if the solutions `stdout` stream or `stderr` stream is fed into the metric.
+CEVA imports the list of solution metrics from the `smetrics` parameter. The parameters and behaviour are equal to the [Instance Metric Configuration](#instance-metric-configuration). The only exception is the additional `input` parameter to determine if the solutions `stdout` stream or `stderr` stream is fed into the metric.
 
 ### Parameters
  *  `input`: Source of solution data (`stdout` or `stderr`) to use as input (default: `stdout`)
@@ -190,4 +191,45 @@ smetrics:
   errorcount:
     run_path: wc -l
     input: stderr
+```
+
+# Execution Configuration
+
+By default CEVA calculates all missing solutions and metric values on all instances and solutions when it is started. But, CEVA can be configured to only check certain metrics, algorithms, or instances. Active instances can be filtered by their instance metric values. The metrics and algorithms themselves can be toggled on and off via whitelists/blacklists.
+
+## Active Instances
+
+To only consider instances with a certain metric value during a CEVA run, just set the following filter:
+```
+execute:
+  instances:
+    - metric: metricname
+      value: 42
+```
+
+To filter for a set of values, use the `values` attribute:
+```
+execute:
+  instances:
+    - metric: metricname
+      value: ["tag-A", "tag-B"]
+```
+
+The filter works for all types of instance metrics. For metrics of type string, there is also a filter that matches against the given string. The `contains` attribute can also take a set of patterns to match and each instance matching any pattern is used. 
+
+```
+execute:
+  instances:
+    - metric: metricname
+      contains: "tag-A"
+```
+
+There can also be multiple filters. In this case only instances passing all filters are considered.  
+```
+execute:
+  instances:
+    - metric: metricname
+      contains: "tag-A"
+    - metric: hardproblem
+      value: 1
 ```
