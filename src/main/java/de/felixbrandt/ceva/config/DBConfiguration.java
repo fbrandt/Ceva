@@ -10,6 +10,7 @@ public class DBConfiguration
   private String dbtype;
   private String host;
   private int port;
+  private boolean ssl;
   private String dbname;
   private String username;
   private String password;
@@ -31,6 +32,7 @@ public class DBConfiguration
     dbtype = params.getStringParam("type", "h2");
     host = params.getStringParam("host", "localhost");
     port = params.getIntParam("port", DEFAULT_PORT);
+    ssl = params.getBoolParam("ssl", true);
     dbname = params.getStringParam("name", "ceva");
     username = params.getStringParam("username", "ceva");
     password = params.getStringParam("password", "");
@@ -49,6 +51,11 @@ public class DBConfiguration
   public final int getPort ()
   {
     return port;
+  }
+
+  public final boolean getSSL ()
+  {
+    return ssl;
   }
 
   public final String getDatabase ()

@@ -27,10 +27,14 @@ public class PGConfiguration implements DatabaseConfiguration
     result.setProperty("hibernate.connection.driver_class", "org.postgresql.Driver");
     result.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
     result.setProperty("hibernate.hbm2ddl.auto", "update");
-    result.setProperty("hibernate.connection.url",
-            "jdbc:postgresql://" + db_config.getHost() + ":" + port + "/"
-                    + db_config.getDatabase()
-                    + "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory");
+
+    String url = "jdbc:postgresql://" + db_config.getHost() + ":" + port + "/"
+            + db_config.getDatabase();
+    if (db_config.getSSL()) {
+      url += "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
+    }
+    result.setProperty("hibernate.connection.url", url);
+
     result.setProperty("hibernate.connection.username", db_config.getUsername());
     result.setProperty("hibernate.connection.password", db_config.getPassword());
 

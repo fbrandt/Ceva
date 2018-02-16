@@ -50,6 +50,7 @@ Use the `database` parameter to specify the database settings CEVA uses to conne
  * `type`: DBMS type (`h2`, `mysql`, `pgsql`, `sqlite`, default: `h2`)
  * `host`: The database host name (default: `localhost`)
  * `port`: The database port (default depending on type)
+ * `ssl`: Enable ssl connection (default: true, currently only in Postgresql)
  * `name`: The database name (default: `ceva`)
  * `username`: The database user (default: `ceva`)
  * `password`: The database password (default: empty string)
