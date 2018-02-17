@@ -55,7 +55,7 @@ public class GearmanQueueLengthSensor implements Sensor
         out.println("status");
 
         String line = in.readLine();
-        while (!line.equals(".")) {
+        while (line != null && !line.equals(".")) {
           if (line.matches(gearman_queue + "(.*)")) {
             return Integer.parseInt(line.split("\t")[1]);
           }
