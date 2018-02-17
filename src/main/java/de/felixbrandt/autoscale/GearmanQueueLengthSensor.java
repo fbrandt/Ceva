@@ -3,6 +3,7 @@ package de.felixbrandt.autoscale;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 
@@ -36,8 +37,8 @@ public class GearmanQueueLengthSensor implements Sensor
   {
     try {
       socket = new Socket(server, port);
-      out = new PrintWriter(socket.getOutputStream(), true);
-      in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+      out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true);
+      in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
     } catch (IOException e) {
       LOGGER.error(e.getMessage());
     }
@@ -47,16 +48,20 @@ public class GearmanQueueLengthSensor implements Sensor
   {
     for (int reconnect = 0; reconnect < max_reconnect; reconnect++) {
       try {
-        String line;
         if (out == null) {
           throw new IOException("not connected");
         }
+
         out.println("status");
-        while (!(line = in.readLine()).equals(".")) {
+
+        String line = in.readLine();
+        while (!line.equals(".")) {
           if (line.matches(gearman_queue + "(.*)")) {
             return Integer.parseInt(line.split("\t")[1]);
           }
+          line = in.readLine();
         }
+
         // queue does not exist (so it has 0 length)
         return 0;
       } catch (IOException e) {

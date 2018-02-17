@@ -13,6 +13,6 @@ public class ShellCommandFactory extends CommandFactory
   public final Command create (final String command, final InputStream stdin,
           final int timelimit)
   {
-    return new ShellFileCommand(command, stdin, timelimit);
+    return new CevaShellFileCommand(command, stdin, timelimit);
   }
 }

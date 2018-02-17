@@ -35,7 +35,7 @@ public class InstanceMetricMatchHQLFilterTest
   public void testQuery ()
   {
     assertEquals(
-            " AND instance IN (SELECT d_1.source FROM InstanceDataString d_1 WHERE d_1.rule = 42 AND (true IS false OR d_1.value LIKE :value_0_1 OR d_1.value LIKE :value_1_1))",
+            "instance IN (SELECT d_1.source FROM InstanceDataString d_1 WHERE d_1.rule = 42 AND (true IS false OR d_1.value LIKE :value_0_1 OR d_1.value LIKE :value_1_1))",
             filter.getWhereClause("1"));
   }
 

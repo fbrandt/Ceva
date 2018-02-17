@@ -5,13 +5,21 @@ import java.io.InputStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class ShellStreamCommand extends de.felixbrandt.support.ShellStreamCommand
+import de.felixbrandt.ceva.controller.base.Command;
+
+public class CevaShellFileCommand extends de.felixbrandt.support.ShellFileCommand
+        implements Command
 {
   private static final Logger LOGGER = LogManager.getLogger();
 
-  public ShellStreamCommand(String command, InputStream stdin)
+  public CevaShellFileCommand(String command, InputStream stdin)
   {
-    super(command, stdin);
+    this(command, stdin, 0);
+  }
+
+  public CevaShellFileCommand(String command, InputStream stdin, int timelimit)
+  {
+    super(command, stdin, timelimit);
 
     try {
       LOGGER.debug("running command: {}", command);

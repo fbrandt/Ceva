@@ -21,7 +21,7 @@ public abstract class ShellCommand
   private long process_finish_time;
   private boolean timelimit_exceeded;
 
-  public class ShellCommandError extends Exception
+  public static class ShellCommandError extends Exception
   {
     private static final long serialVersionUID = 1L;
 
@@ -31,7 +31,7 @@ public abstract class ShellCommand
     }
   }
 
-  public class ShellCommandWarning extends Exception
+  public static class ShellCommandWarning extends Exception
   {
     private static final long serialVersionUID = 1L;
 

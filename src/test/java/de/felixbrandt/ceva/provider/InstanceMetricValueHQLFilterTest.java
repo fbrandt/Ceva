@@ -33,7 +33,7 @@ public class InstanceMetricValueHQLFilterTest
     InstanceMetricValueHQLFilter filter = new InstanceMetricValueHQLFilter(metric, values);
 
     assertEquals(
-            " AND instance IN (SELECT d_1.source FROM InstanceDataString d_1 WHERE d_1.rule = 42 AND d_1.value IN :value_1)",
+            "instance IN (SELECT d_1.source FROM InstanceDataString d_1 WHERE d_1.rule = 42 AND d_1.value IN :value_1)",
             filter.getWhereClause("1"));
 
     Map<String, Object> params = filter.getParameters("prefix");
@@ -52,7 +52,7 @@ public class InstanceMetricValueHQLFilterTest
     InstanceMetricValueHQLFilter filter = new InstanceMetricValueHQLFilter(metric, values);
 
     assertEquals(
-            " AND instance IN (SELECT d_1.source FROM InstanceDataInteger d_1 WHERE d_1.rule = 42 AND d_1.value IN :value_1)",
+            "instance IN (SELECT d_1.source FROM InstanceDataInteger d_1 WHERE d_1.rule = 42 AND d_1.value IN :value_1)",
             filter.getWhereClause("1"));
     assertEquals(int_values, filter.getValues());
   }
@@ -68,7 +68,7 @@ public class InstanceMetricValueHQLFilterTest
     InstanceMetricValueHQLFilter filter = new InstanceMetricValueHQLFilter(metric, values);
 
     assertEquals(
-            " AND instance IN (SELECT d_1.source FROM InstanceDataDouble d_1 WHERE d_1.rule = 42 AND d_1.value IN :value_1)",
+            "instance IN (SELECT d_1.source FROM InstanceDataDouble d_1 WHERE d_1.rule = 42 AND d_1.value IN :value_1)",
             filter.getWhereClause("1"));
     assertEquals(dbl_values, filter.getValues());
   }

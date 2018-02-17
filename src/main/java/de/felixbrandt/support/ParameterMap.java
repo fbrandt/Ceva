@@ -42,6 +42,12 @@ public class ParameterMap
     return false;
   }
 
+  @Override
+  public int hashCode ()
+  {
+    return data.hashCode();
+  }
+
   public final String getStringParam (final String name)
   {
     return getStringParam(name, "");

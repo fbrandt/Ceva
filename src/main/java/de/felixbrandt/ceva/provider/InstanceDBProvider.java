@@ -37,17 +37,18 @@ public class InstanceDBProvider implements DataSourceProvider, InstanceProvider
 
   public final Collection<Instance> getInstances (final SessionHandler handler)
   {
-    String query = "from Instance WHERE active = true";
+    StringBuilder query = new StringBuilder();
+    query.append("from Instance WHERE active = true");
 
     int prefix = 1;
     for (HQLFilter filter : instance_filters) {
       if (filter != null) {
-        query = query + " " + filter.getWhereClause(Integer.toString(prefix));
+        query.append(" AND " + filter.getWhereClause(Integer.toString(prefix)));
         prefix += 1;
       }
     }
 
-    final Query stmt = handler.getSession().createQuery(query);
+    final Query stmt = handler.getSession().createQuery(query.toString());
 
     prefix = 1;
     for (HQLFilter filter : instance_filters) {

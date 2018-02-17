@@ -1,5 +1,6 @@
 package de.felixbrandt.autoscale;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -36,7 +37,8 @@ public class InstanceManager
     key_name = _key_name;
     security_group = _security_group;
 
-    encoded_user_data = Base64.getEncoder().encodeToString(user_data.getBytes());
+    encoded_user_data = Base64.getEncoder()
+            .encodeToString(user_data.getBytes(Charset.forName("UTF-8")));
   }
 
   public void start (int n)

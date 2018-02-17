@@ -17,17 +17,19 @@ public class InstanceMetricMatchHQLFilter extends InstanceMetricHQLFilter
   public final String getWhereClause (String prefix)
   {
     final String sub_prefix = "d_" + prefix;
-    String query = " AND instance IN (SELECT " + sub_prefix + ".source FROM "
-            + getMetric().getDataEntity() + " " + sub_prefix + " WHERE " + sub_prefix
-            + ".rule = " + getMetric().getId() + " AND (true IS false";
+    final StringBuilder result = new StringBuilder();
+
+    result.append("instance IN (SELECT " + sub_prefix + ".source");
+    result.append(" FROM " + getMetric().getDataEntity() + " " + sub_prefix);
+    result.append(" WHERE " + sub_prefix + ".rule = " + getMetric().getId());
+    result.append(" AND (true IS false");
 
     for (int i = 0; i < getValues().size(); i++) {
-      query = query + " OR " + sub_prefix + ".value LIKE :value_" + i + "_" + prefix;
+      result.append(" OR " + sub_prefix + ".value LIKE :value_" + i + "_" + prefix);
     }
 
-    query = query + "))";
-
-    return query;
+    result.append("))");
+    return result.toString();
   }
 
   public final Map<String, Object> getParameters (String prefix)
