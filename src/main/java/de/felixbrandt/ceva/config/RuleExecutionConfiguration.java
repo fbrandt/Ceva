@@ -1,6 +1,8 @@
 package de.felixbrandt.ceva.config;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.felixbrandt.support.ParameterMap;
 
@@ -38,6 +40,17 @@ public class RuleExecutionConfiguration
   public List<String> getBlacklist ()
   {
     return (List<String>) params.getListParam("exclude", null);
+  }
+
+  public ParameterMap getDecorators ()
+  {
+    Map<String, Object> result = new HashMap<String, Object>();
+    for (String key : params.keySet()) {
+      if (!key.equals("include") && !key.equals("exclude")) {
+        result.put(key, params.getMapParam(key));
+      }
+    }
+    return new ParameterMap(result);
   }
 
 }
