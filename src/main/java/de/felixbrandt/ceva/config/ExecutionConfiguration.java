@@ -11,7 +11,7 @@ import de.felixbrandt.support.ParameterMap;
  */
 public class ExecutionConfiguration
 {
-  private ParameterMap params;
+  private ParameterMap execute_params;
 
   public ExecutionConfiguration()
   {
@@ -23,12 +23,13 @@ public class ExecutionConfiguration
     init(params);
   }
 
-  private final void init (final ParameterMap params)
+  private void init (final ParameterMap params)
   {
-    this.params = params;
+    execute_params = params;
   }
 
-  public final List<InstanceFilterConfiguration> createInstanceFilters (final List<?> filters)
+  public final List<InstanceFilterConfiguration> createInstanceFilters (
+          final List<?> filters)
   {
     List<InstanceFilterConfiguration> instance_filters = new ArrayList<InstanceFilterConfiguration>();
 
@@ -42,10 +43,12 @@ public class ExecutionConfiguration
     return instance_filters;
   }
 
-  public final InstanceFilterConfiguration createInstanceFilter (final ParameterMap params)
+  public final InstanceFilterConfiguration createInstanceFilter (
+          final ParameterMap params)
   {
     if (params.has("files")) {
-      return new FileInstanceFilterConfiguration((List<String>) params.getListParam("files"));
+      return new FileInstanceFilterConfiguration(
+              (List<String>) params.getListParam("files"));
     } else if (params.has("metric")) {
       if (params.has("contains")) {
         return new MetricMatchInstanceFilterConfiguration(params);
@@ -58,32 +61,32 @@ public class ExecutionConfiguration
 
   public final List<InstanceFilterConfiguration> getInstanceFilters ()
   {
-    return createInstanceFilters(params.getListParam("instances"));
+    return createInstanceFilters(execute_params.getListParam("instances"));
   }
 
-  public final RuleExecutionConfiguration getRuleConfiguration (final ParameterMap params,
-          String key)
+  public final RuleExecutionConfiguration getRuleConfiguration (
+          final ParameterMap params, final String key)
   {
     if (params.isMapParam(key)) {
       return new RuleExecutionConfiguration(true, params.getMapParam(key));
     }
 
-    boolean active = params.getBoolParam(key, true);
+    final boolean active = params.getBoolParam(key, true);
     return new RuleExecutionConfiguration(active);
   }
 
-  public RuleExecutionConfiguration getInstanceMetricConfiguration ()
+  public final RuleExecutionConfiguration getInstanceMetricConfiguration ()
   {
-    return getRuleConfiguration(params, "imetrics");
+    return getRuleConfiguration(execute_params, "imetrics");
   }
 
-  public RuleExecutionConfiguration getAlgorithmConfiguration ()
+  public final RuleExecutionConfiguration getAlgorithmConfiguration ()
   {
-    return getRuleConfiguration(params, "algorithms");
+    return getRuleConfiguration(execute_params, "algorithms");
   }
 
-  public RuleExecutionConfiguration getSolutionMetricConfiguration ()
+  public final RuleExecutionConfiguration getSolutionMetricConfiguration ()
   {
-    return getRuleConfiguration(params, "smetrics");
+    return getRuleConfiguration(execute_params, "smetrics");
   }
 }
