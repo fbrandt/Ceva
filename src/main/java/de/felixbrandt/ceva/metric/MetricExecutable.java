@@ -10,8 +10,8 @@ import de.felixbrandt.ceva.entity.RuleAware;
 /**
  * Wrap Metric to act as Executable.
  */
-public abstract class MetricExecutable<MetricType extends Metric> implements RuleAware,
-        Executable, java.io.Serializable
+public abstract class MetricExecutable<MetricType extends Metric>
+        implements RuleAware, Executable, java.io.Serializable
 {
   private static final long serialVersionUID = 1L;
   private MetricType metric;
@@ -36,9 +36,14 @@ public abstract class MetricExecutable<MetricType extends Metric> implements Rul
     return metric.getFullRunPath();
   }
 
-  public final String getName ()
+  public final String toString ()
   {
     return "metric " + metric.getName();
+  }
+
+  public final String getName ()
+  {
+    return metric.getName();
   }
 
   public abstract ResultFactory getResultFactory ();

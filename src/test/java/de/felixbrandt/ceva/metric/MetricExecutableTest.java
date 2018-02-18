@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.felixbrandt.ceva.entity.InstanceMetric;
-import de.felixbrandt.ceva.metric.InstanceMetricExecutable;
 
 public class MetricExecutableTest
 {
@@ -53,9 +52,16 @@ public class MetricExecutableTest
   }
 
   @Test
+  public void testToString ()
+  {
+    metric.setName("test");
+    assertEquals("metric test", executable.toString());
+  }
+
+  @Test
   public void testGetName ()
   {
     metric.setName("test");
-    assertEquals("metric test", executable.getName());
+    assertEquals("test", executable.getName());
   }
 }

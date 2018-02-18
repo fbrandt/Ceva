@@ -12,8 +12,6 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.felixbrandt.ceva.algorithm.AlgorithmExecutable;
-import de.felixbrandt.ceva.algorithm.SolutionFactory;
 import de.felixbrandt.ceva.controller.base.Executable;
 import de.felixbrandt.ceva.controller.base.ResultFactory;
 import de.felixbrandt.ceva.entity.Algorithm;
@@ -59,10 +57,17 @@ public class AlgorithmExecutableTest
   }
 
   @Test
+  public void testToString ()
+  {
+    algorithm.setName("test");
+    assertEquals("algorithm test", executable.toString());
+  }
+
+  @Test
   public void testGetName ()
   {
     algorithm.setName("test");
-    assertEquals("algorithm test", executable.getName());
+    assertEquals("test", executable.getName());
   }
 
   @Test
@@ -98,7 +103,8 @@ public class AlgorithmExecutableTest
 
     algorithm.setRunPath("{a} {b}");
 
-    AlgorithmExecutable param_executable = new AlgorithmExecutable(algorithm, parameters);
+    AlgorithmExecutable param_executable = new AlgorithmExecutable(algorithm,
+            parameters);
 
     String params = param_executable.getParametersAsString();
     assertEquals("a: 1;b: 2;", params);
@@ -116,7 +122,8 @@ public class AlgorithmExecutableTest
     parameters.put("b", "2");
 
     algorithm.setRunPath("{a} {x} {z} {11a} {11b} {b}");
-    AlgorithmExecutable param_executable = new AlgorithmExecutable(algorithm, parameters);
+    AlgorithmExecutable param_executable = new AlgorithmExecutable(algorithm,
+            parameters);
 
     String params = param_executable.getParametersAsString();
     assertEquals("11a: 1;11b: 0;a: 1;b: 2;x: a;z: b;", params);
@@ -130,7 +137,8 @@ public class AlgorithmExecutableTest
     parameters.put("b", "2");
     algorithm.setRunPath("{a} {b}");
 
-    AlgorithmExecutable param_executable = new AlgorithmExecutable(algorithm, parameters);
+    AlgorithmExecutable param_executable = new AlgorithmExecutable(algorithm,
+            parameters);
 
     assertEquals(2, param_executable.getParameters().size());
     assertEquals("1", param_executable.getParameters().get("a"));

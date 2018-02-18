@@ -20,7 +20,8 @@ import de.felixbrandt.support.StringSupport;
 /**
  * Wrap Algorithm to act as Executable.
  */
-public class AlgorithmExecutable implements Executable, RuleAware, java.io.Serializable
+public class AlgorithmExecutable
+        implements Executable, RuleAware, java.io.Serializable
 {
   private static final long serialVersionUID = 1L;
 
@@ -33,7 +34,8 @@ public class AlgorithmExecutable implements Executable, RuleAware, java.io.Seria
     parameters = new HashMap<String, String>();
   }
 
-  public AlgorithmExecutable(final Algorithm algo, final Map<String, String> params)
+  public AlgorithmExecutable(final Algorithm algo,
+          final Map<String, String> params)
   {
     algorithm = algo;
     setParameters(params);
@@ -54,9 +56,14 @@ public class AlgorithmExecutable implements Executable, RuleAware, java.io.Seria
     return StringSupport.renderString(algorithm.getFullRunPath(), parameters);
   }
 
-  public final String getName ()
+  public final String toString ()
   {
     return "algorithm " + algorithm.getName();
+  }
+
+  public final String getName ()
+  {
+    return algorithm.getName();
   }
 
   public final ResultFactory getResultFactory ()
@@ -69,7 +76,8 @@ public class AlgorithmExecutable implements Executable, RuleAware, java.io.Seria
     return ContentMode.DEFAULT;
   }
 
-  public static Collection<Executable> generate (final Iterable<Algorithm> algorithms)
+  public static Collection<Executable> generate (
+          final Iterable<Algorithm> algorithms)
   {
     final Vector<Executable> result = new Vector<Executable>();
 
@@ -81,7 +89,8 @@ public class AlgorithmExecutable implements Executable, RuleAware, java.io.Seria
     return result;
   }
 
-  public static List<AlgorithmExecutable> generateAll (final Algorithm algorithm)
+  public static List<AlgorithmExecutable> generateAll (
+          final Algorithm algorithm)
   {
     final List<AlgorithmExecutable> executables = new ArrayList<AlgorithmExecutable>();
 
@@ -98,7 +107,8 @@ public class AlgorithmExecutable implements Executable, RuleAware, java.io.Seria
     return executables;
   }
 
-  public static List<Map<String, String>> generateParameters (final Algorithm algorithm)
+  public static List<Map<String, String>> generateParameters (
+          final Algorithm algorithm)
   {
     return StringSupport.generateAllPossibleTuples(algorithm.getParameters());
   }
@@ -121,7 +131,8 @@ public class AlgorithmExecutable implements Executable, RuleAware, java.io.Seria
   public final void setParameters (final Map<String, String> params)
   {
     Map<String, String> filtered_parameters = new HashMap<String, String>();
-    Set<String> run_path_tokens = StringSupport.getTokens(algorithm.getFullRunPath());
+    Set<String> run_path_tokens = StringSupport
+            .getTokens(algorithm.getFullRunPath());
 
     if (params != null) {
       Iterator<Entry<String, String>> it = params.entrySet().iterator();

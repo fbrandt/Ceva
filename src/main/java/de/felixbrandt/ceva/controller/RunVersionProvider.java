@@ -23,11 +23,11 @@ public class RunVersionProvider implements VersionProvider
   public final int getVersion (final Executable executable)
   {
     try {
-      LOGGER.debug("determining version of {}", executable.getName());
+      LOGGER.debug("determining version of {}", executable);
       final String version_path = executable.getFullVersionPath();
 
       if (version_path == null || version_path.equals("")) {
-        LOGGER.debug("no version configured for {}, assuming 0", executable.getName());
+        LOGGER.debug("no version configured for {}, assuming 0", executable);
 
         return 0;
       }
@@ -36,7 +36,8 @@ public class RunVersionProvider implements VersionProvider
 
       return Integer.parseInt(command.getStdoutString().trim());
     } catch (final NumberFormatException e) {
-      LOGGER.error("failed to detect version of {}: {}", executable.getName(), e.getMessage());
+      LOGGER.error("failed to detect version of {}: {}", executable,
+              e.getMessage());
     }
 
     return -1;

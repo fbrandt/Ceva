@@ -19,7 +19,8 @@ public class GearmanJobFunction extends AbstractGearmanFunction
 
   private Controller controller;
 
-  public GearmanJobFunction(final String queue_name, final Controller _controller)
+  public GearmanJobFunction(final String queue_name,
+          final Controller _controller)
   {
     super(queue_name);
     controller = _controller;
@@ -29,17 +30,18 @@ public class GearmanJobFunction extends AbstractGearmanFunction
   public final GearmanJobResult executeFunction ()
   {
     final Job job = (Job) SerializeSupport.deserialize((byte[]) data);
-    LOGGER.info("running job {} on {}", job.getExecutable().getName(),
+    LOGGER.info("running job {} on {}", job.getExecutable(),
             job.getSource().getName());
     final Object result = controller.run(job.getExecutable(), job.getSource());
     final byte[] empty = new byte[0];
 
     if (result != null) {
-      return new GearmanJobResultImpl(jobHandle, true, SerializeSupport.serialize(result),
-              empty, empty, 0, 0);
+      return new GearmanJobResultImpl(jobHandle, true,
+              SerializeSupport.serialize(result), empty, empty, 0, 0);
     }
 
-    return new GearmanJobResultImpl(jobHandle, false, empty, empty, empty, 0, 0);
+    return new GearmanJobResultImpl(jobHandle, false, empty, empty, empty, 0,
+            0);
   }
 
 }

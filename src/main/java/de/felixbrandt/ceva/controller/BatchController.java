@@ -24,7 +24,8 @@ public class BatchController
     source_filter = null;
   }
 
-  public BatchController(final Controller controller, final DataSourceFilter filter)
+  public BatchController(final Controller controller,
+          final DataSourceFilter filter)
   {
     wrapped_controller = controller;
     source_filter = filter;
@@ -42,7 +43,7 @@ public class BatchController
           final Collection<? extends DataSource> sources)
   {
     if (source_filter != null) {
-      LOGGER.info("filter sources for {}", executable.getName());
+      LOGGER.info("filter sources for {}", executable);
       run(executable, source_filter.doFilter(executable, sources));
     } else {
       run(executable, sources);
@@ -56,7 +57,8 @@ public class BatchController
     final int n = sources.size();
 
     for (final DataSource source : sources) {
-      LOGGER.info("running {} for {}({}/{})", executable.getName(), source.getName(), i++, n);
+      LOGGER.info("running {} for {}({}/{})", executable, source.getName(), i++,
+              n);
       run(executable, source);
       source.doneForNow();
     }
@@ -66,7 +68,7 @@ public class BatchController
           final DataSource source)
   {
     for (final Executable executable : executables) {
-      LOGGER.info("running {} for {}", executable.getName(), source.getName());
+      LOGGER.info("running {} for {}", executable, source.getName());
       run(executable, source);
     }
     source.doneForNow();

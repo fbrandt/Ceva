@@ -22,7 +22,6 @@ import de.felixbrandt.ceva.metric.InstanceMetricExecutable;
 import de.felixbrandt.ceva.metric.InstanceSource;
 import de.felixbrandt.ceva.metric.SolutionMetricExecutable;
 import de.felixbrandt.ceva.metric.SolutionSource;
-import de.felixbrandt.ceva.queue.Job;
 
 public class JobTest
 {
@@ -54,7 +53,8 @@ public class JobTest
     return out_stream.toByteArray();
   }
 
-  public static Object deserialize (final byte[] data) throws ClassNotFoundException, IOException
+  public static Object deserialize (final byte[] data)
+          throws ClassNotFoundException, IOException
   {
     final ByteArrayInputStream in_stream = new ByteArrayInputStream(data);
     ObjectInputStream deserializer;
@@ -63,47 +63,53 @@ public class JobTest
   }
 
   @Test
-  public void testSerializationInstanceMetricJob () throws IOException, ClassNotFoundException
+  public void testSerializationInstanceMetricJob ()
+          throws IOException, ClassNotFoundException
   {
     final InstanceMetric imetric = new InstanceMetric();
     imetric.setName("mymetric");
 
-    final Job original_job = new Job(new InstanceMetricExecutable(imetric), isource);
+    final Job original_job = new Job(new InstanceMetricExecutable(imetric),
+            isource);
     final byte[] serialization = serialize(original_job);
     final Job rebuild_job = (Job) deserialize(serialization);
 
     assertFalse(isource == rebuild_job.getSource());
-    assertEquals("metric mymetric", rebuild_job.getExecutable().getName());
+    assertEquals("metric mymetric", rebuild_job.getExecutable().toString());
     assertEquals("testinstance", rebuild_job.getSource().getName());
   }
 
   @Test
-  public void testSerializationAlgorithmJob () throws IOException, ClassNotFoundException
+  public void testSerializationAlgorithmJob ()
+          throws IOException, ClassNotFoundException
   {
     final Algorithm algorithm = new Algorithm();
     algorithm.setName("myalgo");
 
-    final Job original_job = new Job(new AlgorithmExecutable(algorithm), isource);
+    final Job original_job = new Job(new AlgorithmExecutable(algorithm),
+            isource);
     final byte[] serialization = serialize(original_job);
     final Job rebuild_job = (Job) deserialize(serialization);
 
     assertFalse(isource == rebuild_job.getSource());
-    assertEquals("algorithm myalgo", rebuild_job.getExecutable().getName());
+    assertEquals("algorithm myalgo", rebuild_job.getExecutable().toString());
     assertEquals("testinstance", rebuild_job.getSource().getName());
   }
 
   @Test
-  public void testSerializationSolutionMetricJob () throws IOException, ClassNotFoundException
+  public void testSerializationSolutionMetricJob ()
+          throws IOException, ClassNotFoundException
   {
     final SolutionMetric smetric = new SolutionMetric();
     smetric.setName("solmetric");
 
-    final Job original_job = new Job(new SolutionMetricExecutable(smetric), ssource);
+    final Job original_job = new Job(new SolutionMetricExecutable(smetric),
+            ssource);
     final byte[] serialization = serialize(original_job);
     final Job rebuild_job = (Job) deserialize(serialization);
 
     assertFalse(isource == rebuild_job.getSource());
-    assertEquals("metric solmetric", rebuild_job.getExecutable().getName());
+    assertEquals("metric solmetric", rebuild_job.getExecutable().toString());
     assertEquals("solution to testinstance", rebuild_job.getSource().getName());
   }
 }

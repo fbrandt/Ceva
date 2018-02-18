@@ -24,13 +24,15 @@ public class UnsolvedSourcesFilter implements DataSourceFilter
   private final UnsolvedProvider unsolved_provider;
   private final VersionProvider version_provider;
 
-  public UnsolvedSourcesFilter(final UnsolvedProvider storage, final VersionProvider provider)
+  public UnsolvedSourcesFilter(final UnsolvedProvider storage,
+          final VersionProvider provider)
   {
     unsolved_provider = storage;
     version_provider = provider;
   }
 
-  public final Collection<? extends DataSource> doFilter (final Executable executable,
+  public final Collection<? extends DataSource> doFilter (
+          final Executable executable,
           final Collection<? extends DataSource> all_sources)
   {
     final int version = version_provider.getVersion(executable);
@@ -42,10 +44,12 @@ public class UnsolvedSourcesFilter implements DataSourceFilter
     return all_sources;
   }
 
-  public final Collection<? extends DataSource> doFilter (final Executable executable,
-          final int version, final Collection<? extends DataSource> all_sources)
+  public final Collection<? extends DataSource> doFilter (
+          final Executable executable, final int version,
+          final Collection<? extends DataSource> all_sources)
   {
-    final HashSet<Integer> unsolved_ids = unsolved_provider.getUnsolved(executable, version);
+    final HashSet<Integer> unsolved_ids = unsolved_provider
+            .getUnsolved(executable, version);
     final List<DataSource> unsolved_sources = new ArrayList<DataSource>();
 
     for (final DataSource source : all_sources) {
@@ -55,7 +59,7 @@ public class UnsolvedSourcesFilter implements DataSourceFilter
     }
 
     LOGGER.info("found {} missing values for {}", unsolved_sources.size(),
-            executable.getName());
+            executable);
 
     return unsolved_sources;
   }
