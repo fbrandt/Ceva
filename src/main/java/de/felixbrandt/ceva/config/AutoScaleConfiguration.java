@@ -44,27 +44,31 @@ public class AutoScaleConfiguration
     init(params);
   }
 
-  private final void init (final ParameterMap params)
+  private void init (final ParameterMap params)
   {
     is_active = params.getBoolParam("active", false);
     aws_key = params.getStringParam("aws_key", "");
     aws_secret = params.getStringParam("aws_secret", "");
     aws_region = params.getStringParam("aws_region", DEFAULT_AWS_REGION);
     image_id = params.getStringParam("image_id", "");
-    instance_type = params.getStringParam("instance_type", DEFAULT_INSTANCE_TYPE);
+    instance_type = params.getStringParam("instance_type",
+            DEFAULT_INSTANCE_TYPE);
     key_name = params.getStringParam("key_name", "");
-    security_group = params.getStringParam("security_group", DEFAULT_SECURITY_GROUP);
+    security_group = params.getStringParam("security_group",
+            DEFAULT_SECURITY_GROUP);
     aws_filesystem = params.getStringParam("aws_filesystem", null);
     aws_command = params.getStringParam("aws_command", null);
     workers_per_instance = params.getIntParam("workers_per_instance", 1);
-    idle_timeout = params.getIntParam("idle_timeout", DEFAULT_IDLE_TIMEOUT_SECONDS);
+    idle_timeout = params.getIntParam("idle_timeout",
+            DEFAULT_IDLE_TIMEOUT_SECONDS);
     aws_run_ceva = params.getBoolParam("aws_run_ceva", true);
     aws_auto_shutdown = params.getBoolParam("aws_auto_shutdown", true);
     start_size = params.getIntParam("start_size", 1);
     max_size = params.getIntParam("max_size", 1);
     step = params.getIntParam("step", 1);
     factor = params.getIntParam("factor", 1);
-    check_interval = params.getIntParam("check_interval", DEFAULT_CHECK_INTERVAL_SECONDS);
+    check_interval = params.getIntParam("check_interval",
+            DEFAULT_CHECK_INTERVAL_SECONDS);
   }
 
   public final boolean isActive ()
@@ -72,9 +76,9 @@ public class AutoScaleConfiguration
     return is_active;
   }
 
-  public final void setActive (final boolean active)
+  public final void setActive (final boolean value)
   {
-    is_active = active;
+    is_active = value;
   }
 
   public final String getAWSRegion ()
@@ -82,9 +86,9 @@ public class AutoScaleConfiguration
     return aws_region;
   }
 
-  public final void setAWSRegion (final String aws_region)
+  public final void setAWSRegion (final String value)
   {
-    this.aws_region = aws_region;
+    aws_region = value;
   }
 
   public final String getAWSKey ()
@@ -92,9 +96,9 @@ public class AutoScaleConfiguration
     return aws_key;
   }
 
-  public final void setAWSKey (final String aws_key)
+  public final void setAWSKey (final String value)
   {
-    this.aws_key = aws_key;
+    aws_key = value;
   }
 
   public final String getAWSSecret ()
@@ -102,9 +106,9 @@ public class AutoScaleConfiguration
     return aws_secret;
   }
 
-  public final void setAWSSecret (final String aws_secret)
+  public final void setAWSSecret (final String value)
   {
-    this.aws_secret = aws_secret;
+    aws_secret = value;
   }
 
   public final String getImageId ()
@@ -112,9 +116,9 @@ public class AutoScaleConfiguration
     return image_id;
   }
 
-  public final void setImageId (final String image_id)
+  public final void setImageId (final String value)
   {
-    this.image_id = image_id;
+    image_id = value;
   }
 
   public final String getInstanceType ()
@@ -122,9 +126,9 @@ public class AutoScaleConfiguration
     return instance_type;
   }
 
-  public final void setInstanceType (final String instance_type)
+  public final void setInstanceType (final String value)
   {
-    this.instance_type = instance_type;
+    instance_type = value;
   }
 
   public final String getKeyName ()
@@ -132,9 +136,9 @@ public class AutoScaleConfiguration
     return key_name;
   }
 
-  public final void setKeyName (final String key_name)
+  public final void setKeyName (final String value)
   {
-    this.key_name = key_name;
+    key_name = value;
   }
 
   public final String getSecurityGroup ()
@@ -142,9 +146,9 @@ public class AutoScaleConfiguration
     return security_group;
   }
 
-  public final void setSecurityGroup (final String security_group)
+  public final void setSecurityGroup (final String value)
   {
-    this.security_group = security_group;
+    security_group = value;
   }
 
   public final int getStartSize ()
@@ -152,9 +156,9 @@ public class AutoScaleConfiguration
     return start_size;
   }
 
-  public final void setMaxSize (final int max_size)
+  public final void setMaxSize (final int value)
   {
-    this.max_size = max_size;
+    max_size = value;
   }
 
   public final int getMaxSize ()
@@ -162,9 +166,9 @@ public class AutoScaleConfiguration
     return max_size;
   }
 
-  public final void setStartSize (final int start_size)
+  public final void setStartSize (final int value)
   {
-    this.start_size = start_size;
+    start_size = value;
   }
 
   public final int getStep ()
@@ -172,9 +176,9 @@ public class AutoScaleConfiguration
     return step;
   }
 
-  public final void setStep (final int step)
+  public final void setStep (final int value)
   {
-    this.step = step;
+    step = value;
   }
 
   public final int getFactor ()
@@ -182,9 +186,9 @@ public class AutoScaleConfiguration
     return factor;
   }
 
-  public final void setFactor (final int factor)
+  public final void setFactor (final int value)
   {
-    this.factor = factor;
+    factor = value;
   }
 
   public final int getCheckInterval ()
@@ -192,9 +196,9 @@ public class AutoScaleConfiguration
     return check_interval;
   }
 
-  public final void setCheckInterval (final int check_interval)
+  public final void setCheckInterval (final int value)
   {
-    this.check_interval = check_interval;
+    check_interval = value;
   }
 
   public final String getAWSFilesystem ()
@@ -202,9 +206,19 @@ public class AutoScaleConfiguration
     return aws_filesystem;
   }
 
+  public final void setAWSFilesystem (final String value)
+  {
+    aws_filesystem = value;
+  }
+
   public final int getWorkersPerInstance ()
   {
     return workers_per_instance;
+  }
+
+  public final void setWorkersPerInstance (final int value)
+  {
+    workers_per_instance = value;
   }
 
   public final int getIdleTimeout ()
@@ -212,9 +226,19 @@ public class AutoScaleConfiguration
     return idle_timeout;
   }
 
+  public final void setIdleTimeout (final int value)
+  {
+    idle_timeout = value;
+  }
+
   public final String getAWSCommand ()
   {
     return aws_command;
+  }
+
+  public final void setAWSCommand (final String value)
+  {
+    aws_command = value;
   }
 
   public final boolean getAWSRunCeva ()
@@ -222,8 +246,18 @@ public class AutoScaleConfiguration
     return aws_run_ceva;
   }
 
+  public final void setAWSRunCeva (final boolean value)
+  {
+    aws_run_ceva = value;
+  }
+
   public final boolean getAWSAutoShutdown ()
   {
     return aws_auto_shutdown;
+  }
+
+  public final void setAWSAutoShutdown (final boolean value)
+  {
+    aws_auto_shutdown = value;
   }
 }

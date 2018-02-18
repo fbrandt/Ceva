@@ -1,5 +1,8 @@
 package de.felixbrandt.autoscale;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.ec2.AmazonEC2;
@@ -8,58 +11,67 @@ import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
 import de.felixbrandt.ceva.config.AutoScaleConfiguration;
 import de.felixbrandt.ceva.config.QueueConfiguration;
 
+/**
+ * Manage CEVA workers in AWS.
+ */
 public class AutoScaleManager implements Runnable
 {
+  private static final Logger LOGGER = LogManager.getLogger();
   private InstanceManager instance_manager;
   private ScalingPolicy policy;
   private int check_interval;
   private boolean stop = false;
+  public static final int MICROSECONDS_PER_SECOND = 1000;
 
-  public AutoScaleManager(AutoScaleConfiguration scale_config, QueueConfiguration queue_config)
+  public AutoScaleManager(final AutoScaleConfiguration scale_config,
+          final QueueConfiguration queue_config)
   {
     check_interval = scale_config.getCheckInterval();
 
     Sensor queue_sensor = new GearmanQueueLengthSensor(queue_config.getHost(),
             queue_config.getPort(), queue_config.getJobQueueName());
 
-    BasicAWSCredentials aws_credentials = new BasicAWSCredentials(scale_config.getAWSKey(),
-            scale_config.getAWSSecret());
+    BasicAWSCredentials aws_credentials = new BasicAWSCredentials(
+            scale_config.getAWSKey(), scale_config.getAWSSecret());
     AmazonEC2 aws_client = AmazonEC2ClientBuilder.standard()
             .withCredentials(new AWSStaticCredentialsProvider(aws_credentials))
             .withRegion(scale_config.getAWSRegion()).build();
 
-    String user_data = assembleUserData(scale_config, queue_config);
+    final String user_data = assembleUserData(scale_config, queue_config);
 
-    instance_manager = new InstanceManager(aws_client, scale_config.getImageId(),
-            scale_config.getInstanceType(), scale_config.getKeyName(),
-            scale_config.getSecurityGroup(), user_data);
+    instance_manager = new InstanceManager(aws_client,
+            scale_config.getImageId(), scale_config.getInstanceType(),
+            scale_config.getKeyName(), scale_config.getSecurityGroup(),
+            user_data);
 
-    policy = new ScalingPolicy(queue_sensor, instance_manager, scale_config.getStartSize(),
-            scale_config.getFactor(), scale_config.getMaxSize(), scale_config.getStep());
+    policy = new ScalingPolicy(queue_sensor, instance_manager,
+            scale_config.getStartSize(), scale_config.getFactor(),
+            scale_config.getMaxSize(), scale_config.getStep());
   }
 
-  public void stop ()
+  public final void stop ()
   {
     stop = true;
   }
 
-  public void run ()
+  public final void run ()
   {
     while (!stop) {
       policy.check();
       try {
-        Thread.sleep(check_interval * 1000);
+        Thread.sleep(check_interval * MICROSECONDS_PER_SECOND);
       } catch (InterruptedException e) {
-        // do nothing
+        stop = true;
       }
     }
     instance_manager.stopAll();
   }
 
-  public String assembleUserData (AutoScaleConfiguration scale_config,
-          QueueConfiguration queue_config)
+  public final String assembleUserData (
+          final AutoScaleConfiguration scale_config,
+          final QueueConfiguration queue_config)
   {
-    StringBuilder sb = new StringBuilder();
+    final StringBuilder sb = new StringBuilder();
     sb.append("#!/bin/bash\n");
 
     if (scale_config.getAWSFilesystem() != null) {

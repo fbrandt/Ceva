@@ -16,41 +16,46 @@ import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.amazonaws.services.ec2.model.TerminateInstancesResult;
 
+/**
+ * Manage (Start/Stop) multiple AWS EC2 instances with the same configuration.
+ */
 public class InstanceManager
 {
   private static final Logger LOGGER = LogManager.getLogger();
-  private AmazonEC2 client;
-  private String image_id;
-  private String instance_type;
-  private String key_name;
-  private String security_group;
+  private AmazonEC2 aws_client;
+  private String aws_image_id;
+  private String aws_instance_type;
+  private String aws_key_name;
+  private String aws_security_group;
   private String encoded_user_data;
   private List<String> running_instance_ids;
 
-  public InstanceManager(AmazonEC2 _client, String _image_id, String _instance_type,
-          String _key_name, String _security_group, String user_data)
+  public InstanceManager(final AmazonEC2 client, final String image_id,
+          final String instance_type, final String key_name,
+          final String security_group, final String user_data)
   {
-    running_instance_ids = new ArrayList<String>();
-    client = _client;
-    image_id = _image_id;
-    instance_type = _instance_type;
-    key_name = _key_name;
-    security_group = _security_group;
+    aws_client = client;
+    aws_image_id = image_id;
+    aws_instance_type = instance_type;
+    aws_key_name = key_name;
+    aws_security_group = security_group;
 
     encoded_user_data = Base64.getEncoder()
             .encodeToString(user_data.getBytes(Charset.forName("UTF-8")));
+    running_instance_ids = new ArrayList<String>();
   }
 
-  public void start (int n)
+  public final void start (final int n)
   {
-    RunInstancesRequest runInstancesRequest = new RunInstancesRequest();
+    RunInstancesRequest request = new RunInstancesRequest();
 
-    runInstancesRequest.withImageId(image_id).withInstanceType(instance_type).withMinCount(1)
-            .withMaxCount(n).withKeyName(key_name)
-            .withInstanceInitiatedShutdownBehavior("terminate").withUserData(encoded_user_data)
-            .withSecurityGroups(security_group);
+    request.withImageId(aws_image_id).withInstanceType(aws_instance_type)
+            .withMinCount(1).withMaxCount(n).withKeyName(aws_key_name)
+            .withInstanceInitiatedShutdownBehavior("terminate")
+            .withUserData(encoded_user_data)
+            .withSecurityGroups(aws_security_group);
 
-    RunInstancesResult result = client.runInstances(runInstancesRequest);
+    final RunInstancesResult result = aws_client.runInstances(request);
     for (Instance instance : result.getReservation().getInstances()) {
       LOGGER.warn("Instance: {}({}) is now {}", instance.getInstanceId(),
               instance.getPublicIpAddress(), instance.getState().getName());
@@ -58,15 +63,16 @@ public class InstanceManager
     }
   }
 
-  public int size ()
+  public final int size ()
   {
     return running_instance_ids.size();
   }
 
-  public void stopAll ()
+  public final void stopAll ()
   {
-    TerminateInstancesRequest request = new TerminateInstancesRequest(running_instance_ids);
-    TerminateInstancesResult result = client.terminateInstances(request);
+    TerminateInstancesRequest request = new TerminateInstancesRequest(
+            running_instance_ids);
+    TerminateInstancesResult result = aws_client.terminateInstances(request);
     for (InstanceStateChange state : result.getTerminatingInstances()) {
       LOGGER.warn("Instance: {} is now {}", state.getInstanceId(),
               state.getCurrentState().getName());

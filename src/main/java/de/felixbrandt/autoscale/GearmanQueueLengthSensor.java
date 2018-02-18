@@ -10,41 +10,48 @@ import java.net.Socket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Sensor detecting the current number of jobs in a Gearman queue.
+ */
 public class GearmanQueueLengthSensor implements Sensor
 {
   private static final Logger LOGGER = LogManager.getLogger();
 
-  Socket socket;
-  PrintWriter out;
-  BufferedReader in;
+  private Socket socket;
+  private PrintWriter out;
+  private BufferedReader in;
 
-  String gearman_host;
-  int gearman_port;
-  String gearman_queue;
-  int max_reconnect;
+  private String gearman_host;
+  private int gearman_port;
+  private String gearman_queue;
+  private int max_reconnect;
+  public static final int DEFAULT_RECONNECT = 10;
 
-  public GearmanQueueLengthSensor(String host, int port, String queue)
+  public GearmanQueueLengthSensor(final String host, final int port,
+          final String queue)
   {
     gearman_host = host;
     gearman_port = port;
     gearman_queue = queue;
-    max_reconnect = 10;
+    max_reconnect = DEFAULT_RECONNECT;
 
     connect(gearman_host, gearman_port);
   }
 
-  private void connect (String server, int port)
+  private void connect (final String server, final int port)
   {
     try {
       socket = new Socket(server, port);
-      out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true);
-      in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
+      out = new PrintWriter(
+              new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true);
+      in = new BufferedReader(
+              new InputStreamReader(socket.getInputStream(), "UTF-8"));
     } catch (IOException e) {
       LOGGER.error(e.getMessage());
     }
   }
 
-  public int getValue ()
+  public final int getValue ()
   {
     for (int reconnect = 0; reconnect < max_reconnect; reconnect++) {
       try {
