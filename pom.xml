@@ -3,7 +3,7 @@
   <groupId>de.felixbrandt.ceva</groupId>
   <artifactId>ceva</artifactId>
   <packaging>jar</packaging>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.1</version>
   <name>ceva</name>
   <url>http://maven.apache.org</url>
   <properties>
@@ -54,7 +54,7 @@
     <connection>scm:git:git@github.com:fbrandt/Ceva.git</connection>
     <developerConnection>scm:git:git@github.com:fbrandt/Ceva.git</developerConnection>
     <url>https://github.com/fbrandt/Ceva/tree/master/</url>
-    <tag>HEAD</tag>
+    <tag>ceva-1.1</tag>
   </scm>
   <build>
     <plugins>
