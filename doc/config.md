@@ -17,6 +17,7 @@ Configuration details not related to the experiment data, like the database conn
   * [Algorithm Configuration](#algorithm-configuration)
   * [Solution Metric Configuration](#solution-metric-configuration)
   * [Execution Configuration](#execution-configuration)
+  * [Autoscaling Configuration](#autoscaling-configuration)
   
 # Full example
 ```
@@ -258,3 +259,30 @@ execute:
     exclude:
       - myinactivemetric
 ```
+
+# Autoscaling Configuration
+
+By default you need to manually start worker clients of CEVA on the hosts you want to participate in the calculation. However, CEVA is able to manage its workers itself in the Amazon EC2 cloud. If active the CEVA master starts EC2 instances and CEVA slave instances on them. After all experiments are run, the EC2 instances are shut down automatically. Beware: This feature is experimental and might change significantly in the future!
+
+### Parameters
+ * `active`: Explicitly activate autoscaling (default: `false`)
+ * `aws_key`: AWS EC2 user key for programmatic access (required)
+ * `aws_secret`: AWS EC2 user secret for programmatic access (required)
+ * `aws_region`: AWS region to run the workers in (default: `us-east-2`)
+ * `aws_subnet`: AWS subnet/availability zone of the workers (default: automatic)
+ * `image_id`: Amazon Machine Image (required)
+ * `instance_type`: AWS EC2 instance type (default: `t2.micro`)
+ * `key_name`: SSH key pair name (required)
+ * `security_group`: Security group to place slave instances in (default: `default`)
+ * `aws_filesystem`: External filesystem (EFS) to mount at all instances (under `/data`) (default: not used)
+ * `init_command`: Bash command to run on all instance before starting CEVA slave (default: empty)
+ * `workers_per_instance`: Number of parallel CEVA workers per instance (see [Worker Configuration](#worker-configuration), default: 1)
+ * `idle_timeout`: see [Worker Configuration](#worker-configuration) (default: 3600)
+ * `run_ceva`: Start CEVA worker on each instance (default: `true`)
+ * `ceva_jar`: Path to CEVA jar file (default: `/data/ceva.jar`)
+ * `aws_auto_shutdown`: Shutdown EC2 instances when CEVA worker stops (default: `true`)
+ * `start_size`: Initial number of worker instances to start if jobs are in the queue (default: 1)
+ * `max_size`: Maximum number of worker instances to start (default: 1)
+ * `step`: Number of workers instances to start at once (default: 1)
+ * `factor`: Minimum ratio between demand and capacity to start new worker instances (default: 1)
+ * `check_interval`: Interval (in seconds) to check queue length against running worker instances (default: 10)
