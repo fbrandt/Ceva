@@ -96,11 +96,12 @@ public class AutoScaleManager implements Runnable
       if (scale_config.getIdleTimeout() > 0) {
         sb.append("  idle_timeout: " + scale_config.getIdleTimeout() + "\n");
       }
-      sb.append("\" >> /tmp/ceva.slave.yml\n");
+      sb.append("\" > /tmp/ceva.slave.yml\n");
 
       sb.append("echo \"running CEVA with config\"\n");
       sb.append("cat /tmp/ceva.slave.yml\n");
-      sb.append("java -jar ceva.jar /tmp/ceva.slave.yml\n");
+      sb.append("java -jar " + scale_config.getCevaJar()
+              + " /tmp/ceva.slave.yml\n");
     }
 
     if (scale_config.getAWSAutoShutdown()) {

@@ -62,7 +62,7 @@ public class InstanceManager
       request.withSubnetId(aws_subnet);
     }
 
-    LOGGER.info("Starting {} instances ({}) on AWS", n, aws_instance_type);
+    LOGGER.warn("Starting {} instances ({}) on AWS", n, aws_instance_type);
     final RunInstancesResult result = aws_client.runInstances(request);
     for (Instance instance : result.getReservation().getInstances()) {
       LOGGER.warn("Instance: {}({}) is now {}", instance.getInstanceId(),

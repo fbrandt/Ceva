@@ -12,16 +12,18 @@ public class AutoScaleConfiguration
   private String aws_secret;
   private String aws_region;
   private String aws_subnet;
-  private String image_id;
-  private String instance_type;
-  private String key_name;
-  private String security_group;
+  private String aws_image_id;
+  private String aws_instance_type;
+  private String aws_key_name;
+  private String aws_security_group;
   private String aws_filesystem;
-  private String aws_command;
+  private boolean aws_auto_shutdown;
+
+  private String init_command;
   private int workers_per_instance;
   private int idle_timeout;
-  private boolean aws_run_ceva;
-  private boolean aws_auto_shutdown;
+  private boolean run_ceva;
+  private String ceva_jar;
 
   private int start_size;
   private int max_size;
@@ -52,18 +54,19 @@ public class AutoScaleConfiguration
     aws_secret = params.getStringParam("aws_secret", "");
     aws_region = params.getStringParam("aws_region", DEFAULT_AWS_REGION);
     aws_subnet = params.getStringParam("aws_subnet", null);
-    image_id = params.getStringParam("image_id", "");
-    instance_type = params.getStringParam("instance_type",
+    aws_image_id = params.getStringParam("image_id", "");
+    aws_instance_type = params.getStringParam("instance_type",
             DEFAULT_INSTANCE_TYPE);
-    key_name = params.getStringParam("key_name", "");
-    security_group = params.getStringParam("security_group",
+    aws_key_name = params.getStringParam("key_name", "");
+    aws_security_group = params.getStringParam("security_group",
             DEFAULT_SECURITY_GROUP);
     aws_filesystem = params.getStringParam("aws_filesystem", null);
-    aws_command = params.getStringParam("aws_command", null);
+    init_command = params.getStringParam("init_command", null);
     workers_per_instance = params.getIntParam("workers_per_instance", 1);
     idle_timeout = params.getIntParam("idle_timeout",
             DEFAULT_IDLE_TIMEOUT_SECONDS);
-    aws_run_ceva = params.getBoolParam("aws_run_ceva", true);
+    run_ceva = params.getBoolParam("run_ceva", true);
+    ceva_jar = params.getStringParam("ceva_jar", "ceva.jar");
     aws_auto_shutdown = params.getBoolParam("aws_auto_shutdown", true);
     start_size = params.getIntParam("start_size", 1);
     max_size = params.getIntParam("max_size", 1);
@@ -125,42 +128,42 @@ public class AutoScaleConfiguration
 
   public final String getImageId ()
   {
-    return image_id;
+    return aws_image_id;
   }
 
   public final void setImageId (final String value)
   {
-    image_id = value;
+    aws_image_id = value;
   }
 
   public final String getInstanceType ()
   {
-    return instance_type;
+    return aws_instance_type;
   }
 
   public final void setInstanceType (final String value)
   {
-    instance_type = value;
+    aws_instance_type = value;
   }
 
   public final String getKeyName ()
   {
-    return key_name;
+    return aws_key_name;
   }
 
   public final void setKeyName (final String value)
   {
-    key_name = value;
+    aws_key_name = value;
   }
 
   public final String getSecurityGroup ()
   {
-    return security_group;
+    return aws_security_group;
   }
 
   public final void setSecurityGroup (final String value)
   {
-    security_group = value;
+    aws_security_group = value;
   }
 
   public final int getStartSize ()
@@ -245,22 +248,32 @@ public class AutoScaleConfiguration
 
   public final String getAWSCommand ()
   {
-    return aws_command;
+    return init_command;
   }
 
   public final void setAWSCommand (final String value)
   {
-    aws_command = value;
+    init_command = value;
   }
 
   public final boolean getAWSRunCeva ()
   {
-    return aws_run_ceva;
+    return run_ceva;
   }
 
   public final void setAWSRunCeva (final boolean value)
   {
-    aws_run_ceva = value;
+    run_ceva = value;
+  }
+
+  public final String getCevaJar ()
+  {
+    return ceva_jar;
+  }
+
+  public final void setCevaJar (final String value)
+  {
+    ceva_jar = value;
   }
 
   public final boolean getAWSAutoShutdown ()
