@@ -11,6 +11,7 @@ public class AutoScaleConfiguration
   private String aws_key;
   private String aws_secret;
   private String aws_region;
+  private String aws_subnet;
   private String image_id;
   private String instance_type;
   private String key_name;
@@ -50,6 +51,7 @@ public class AutoScaleConfiguration
     aws_key = params.getStringParam("aws_key", "");
     aws_secret = params.getStringParam("aws_secret", "");
     aws_region = params.getStringParam("aws_region", DEFAULT_AWS_REGION);
+    aws_subnet = params.getStringParam("aws_subnet", null);
     image_id = params.getStringParam("image_id", "");
     instance_type = params.getStringParam("instance_type",
             DEFAULT_INSTANCE_TYPE);
@@ -89,6 +91,16 @@ public class AutoScaleConfiguration
   public final void setAWSRegion (final String value)
   {
     aws_region = value;
+  }
+
+  public final String getAWSSubnet ()
+  {
+    return aws_subnet;
+  }
+
+  public final void setAWSSubnet (final String value)
+  {
+    aws_subnet = value;
   }
 
   public final String getAWSKey ()

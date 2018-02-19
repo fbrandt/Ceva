@@ -23,6 +23,7 @@ public class InstanceManager
 {
   private static final Logger LOGGER = LogManager.getLogger();
   private AmazonEC2 aws_client;
+  private String aws_subnet;
   private String aws_image_id;
   private String aws_instance_type;
   private String aws_key_name;
@@ -30,11 +31,13 @@ public class InstanceManager
   private String encoded_user_data;
   private List<String> running_instance_ids;
 
-  public InstanceManager(final AmazonEC2 client, final String image_id,
-          final String instance_type, final String key_name,
-          final String security_group, final String user_data)
+  public InstanceManager(final AmazonEC2 client, final String subnet,
+          final String image_id, final String instance_type,
+          final String key_name, final String security_group,
+          final String user_data)
   {
     aws_client = client;
+    aws_subnet = subnet;
     aws_image_id = image_id;
     aws_instance_type = instance_type;
     aws_key_name = key_name;
@@ -55,6 +58,11 @@ public class InstanceManager
             .withUserData(encoded_user_data)
             .withSecurityGroups(aws_security_group);
 
+    if (aws_subnet != null) {
+      request.withSubnetId(aws_subnet);
+    }
+
+    LOGGER.info("Starting {} instances ({}) on AWS", n, aws_instance_type);
     final RunInstancesResult result = aws_client.runInstances(request);
     for (Instance instance : result.getReservation().getInstances()) {
       LOGGER.warn("Instance: {}({}) is now {}", instance.getInstanceId(),

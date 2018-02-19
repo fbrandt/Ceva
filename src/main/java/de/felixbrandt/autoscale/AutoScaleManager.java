@@ -40,9 +40,9 @@ public class AutoScaleManager implements Runnable
     final String user_data = assembleUserData(scale_config, queue_config);
 
     instance_manager = new InstanceManager(aws_client,
-            scale_config.getImageId(), scale_config.getInstanceType(),
-            scale_config.getKeyName(), scale_config.getSecurityGroup(),
-            user_data);
+            scale_config.getAWSSubnet(), scale_config.getImageId(),
+            scale_config.getInstanceType(), scale_config.getKeyName(),
+            scale_config.getSecurityGroup(), user_data);
 
     policy = new ScalingPolicy(queue_sensor, instance_manager,
             scale_config.getStartSize(), scale_config.getFactor(),
