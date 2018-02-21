@@ -78,12 +78,14 @@ public class InstanceManager
 
   public final void stopAll ()
   {
-    TerminateInstancesRequest request = new TerminateInstancesRequest(
-            running_instance_ids);
-    TerminateInstancesResult result = aws_client.terminateInstances(request);
-    for (InstanceStateChange state : result.getTerminatingInstances()) {
-      LOGGER.warn("Instance: {} is now {}", state.getInstanceId(),
-              state.getCurrentState().getName());
+    if (running_instance_ids.size() > 0) {
+      TerminateInstancesRequest request = new TerminateInstancesRequest(
+              running_instance_ids);
+      TerminateInstancesResult result = aws_client.terminateInstances(request);
+      for (InstanceStateChange state : result.getTerminatingInstances()) {
+        LOGGER.warn("Instance: {} is now {}", state.getInstanceId(),
+                state.getCurrentState().getName());
+      }
     }
   }
 }
