@@ -10,8 +10,8 @@ import de.felixbrandt.ceva.metric.InstanceMetricExecutable;
 /**
  * Get InstanceMetric instances from database session.
  */
-public class InstanceMetricDBProvider extends MetricDBProvider<InstanceMetric> implements
-        ExecutableProvider
+public class InstanceMetricDBProvider extends MetricDBProvider<InstanceMetric>
+        implements InstanceMetricProvider, ExecutableProvider
 {
   public InstanceMetricDBProvider(final SessionHandler handler)
   {
