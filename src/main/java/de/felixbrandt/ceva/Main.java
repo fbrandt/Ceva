@@ -49,8 +49,8 @@ public class Main
 
     if (args.length > 1) {
       final SessionHandler session_handler = setupSessionHandler(config);
-      final ReportService report_service = CevaReportServiceFactory.setup(session_handler,
-              System.in, System.out);
+      final ReportService report_service = CevaReportServiceFactory
+              .setup(session_handler, System.in, System.out);
       report_service.run(Arrays.asList(args), 1);
       session_handler.rollback();
     } else {
@@ -66,7 +66,8 @@ public class Main
           throws Exception
   {
     final SessionHandler session_handler = CevaSessionBuilder
-            .build(new HibernateConfigurationBuilder().create(config.getDatabaseConfig()));
+            .build(new HibernateConfigurationBuilder()
+                    .create(config.getDatabaseConfig()));
     session_handler.setup();
 
     return session_handler;
@@ -82,14 +83,18 @@ public class Main
               config.getQueueConfig());
       autoscale_thread = new Thread(autoscale_manager);
       autoscale_thread.start();
+    } else {
+      LOGGER.info("not starting autoscaling");
     }
+
     SessionHandler session_handler = null;
     WorkerPool gearman_worker_pool = null;
 
     try {
       if (!config.getQueueConfig().getHost().equals("")) {
         final QueueConfiguration queue_config = config.getQueueConfig();
-        gearman_worker_pool = new WorkerPool(new GearmanWorkerFactory(queue_config),
+        gearman_worker_pool = new WorkerPool(
+                new GearmanWorkerFactory(queue_config),
                 queue_config.getWorkerCount());
         gearman_worker_pool.start();
       }
@@ -103,15 +108,17 @@ public class Main
           strategy = new GearmanExecutionStrategy(config.getQueueConfig());
         } else {
           if (config.getQueueConfig().getWorkerCount() > 1) {
-            strategy = new WorkerExecutionStrategy(config.getQueueConfig().getWorkerCount());
+            strategy = new WorkerExecutionStrategy(
+                    config.getQueueConfig().getWorkerCount());
           } else {
             strategy = new SynchronuousExecutionStrategy();
           }
         }
 
-        LOGGER.info("selected strategy: {}", strategy.getClass().getSimpleName());
-        final ExecutionService service = new ExecutionService(session_handler, strategy,
-                config.getExecutionConfig());
+        LOGGER.info("selected strategy: {}",
+                strategy.getClass().getSimpleName());
+        final ExecutionService service = new ExecutionService(session_handler,
+                strategy, config.getExecutionConfig());
         service.run();
         session_handler.commit();
       } else if (gearman_worker_pool != null) {

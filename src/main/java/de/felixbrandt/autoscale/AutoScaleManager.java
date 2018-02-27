@@ -56,6 +56,8 @@ public class AutoScaleManager implements Runnable
 
   public final void run ()
   {
+    LOGGER.info("Starting autoscaling daemon (interval {}", check_interval);
+
     while (!stop) {
       policy.check();
       try {
@@ -64,6 +66,8 @@ public class AutoScaleManager implements Runnable
         stop = true;
       }
     }
+
+    LOGGER.info("Stopping autoscaling, shutting down all instances");
     instance_manager.stopAll();
   }
 

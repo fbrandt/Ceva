@@ -1,10 +1,14 @@
 package de.felixbrandt.autoscale;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Policy when to start new worker instances based on a sensor value.
  */
 public class ScalingPolicy
 {
+  private static final Logger LOGGER = LogManager.getLogger();
   private Sensor demand_sensor;
   private InstanceManager capacity_manager;
   private int demand_factor;
@@ -29,12 +33,18 @@ public class ScalingPolicy
     final int demand_value = demand_sensor.getValue();
     final int capacity_value = capacity_manager.size();
 
+    LOGGER.info("demand={}, capacity={}", demand_value, capacity_value);
     if (demand_value > 0 && capacity_value == 0) {
       capacity_manager.start(capacity_start_size);
     } else {
-      if (demand_value > demand_factor * capacity_value
-              && capacity_value < capacity_max_size) {
-        capacity_manager.start(capacity_step);
+      if (demand_value > demand_factor * capacity_value) {
+        if (capacity_value < capacity_max_size) {
+          capacity_manager.start(capacity_step);
+        } else {
+          LOGGER.info("not scaling up, maximum reached");
+        }
+      } else {
+        LOGGER.info("not scaling up, not enough excess demand");
       }
     }
   }
