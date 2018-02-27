@@ -106,9 +106,11 @@ queue:
 
 # Instance Configuration
 CEVA reads the list of instance files from the `instances` parameter. Each entry can either be a file or a folder. If a folder is given, then all files in this folder (and its subfolders) will be imported as instances. No wildcards are supported in the instance definition. Instances will be identified by their checksum (MD5). Therefore, it is possible to import multiple files of the same name. If a file's MD5 checksum changes (i.e., even if only whitespace is changed) it will be imported as a new instance, to not break existing experiment results.
+If instances should be identified by their name only, set the parameter `identify_instances_by_name` to true. In this case changed instances are updated in the database. However, currently you manually need to take care of updating the metrics of the instance.
 
 ### Example
 ```
+identify_instances_by_name: false
 instances:
   - data/set1/instance_file.txt
   - data/set2
