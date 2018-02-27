@@ -28,6 +28,11 @@ public class Configuration
     params = new ParameterMap((Map<String, ?>) yaml.load(in));
   }
 
+  public final boolean getIdentifyInstancesByName ()
+  {
+    return params.getBoolParam("identify_instances_by_name", false);
+  }
+
   public final AutoScaleConfiguration getAutoScaleConfig ()
   {
     return new AutoScaleConfiguration(getAutoScaleParams());
@@ -71,7 +76,8 @@ public class Configuration
   public final RuleConfiguration getInstanceMetrics ()
   {
     final ParameterMap metric_params = getInstanceMetricParams();
-    LOGGER.debug("found " + metric_params.size() + " instance metrics in configuration");
+    LOGGER.debug("found " + metric_params.size()
+            + " instance metrics in configuration");
 
     return new RuleConfiguration(new InstanceMetricFactory(), metric_params);
   }
@@ -84,7 +90,8 @@ public class Configuration
   public final RuleConfiguration getAlgorithms ()
   {
     final ParameterMap algo_params = getAlgorithmParams();
-    LOGGER.debug("found " + algo_params.size() + " algorithms in configuration");
+    LOGGER.debug(
+            "found " + algo_params.size() + " algorithms in configuration");
 
     return new RuleConfiguration(new AlgorithmFactory(), algo_params);
   }
@@ -97,7 +104,8 @@ public class Configuration
   public final RuleConfiguration getSolutionMetrics ()
   {
     final ParameterMap metric_params = getSolutionMetricParams();
-    LOGGER.debug("found " + metric_params.size() + " solution metrics in configuration");
+    LOGGER.debug("found " + metric_params.size()
+            + " solution metrics in configuration");
 
     return new RuleConfiguration(new SolutionMetricFactory(), metric_params);
   }

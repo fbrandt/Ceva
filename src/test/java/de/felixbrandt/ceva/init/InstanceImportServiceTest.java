@@ -14,7 +14,6 @@ import de.felixbrandt.ceva.TestSessionBuilder;
 import de.felixbrandt.ceva.config.InstanceFile;
 import de.felixbrandt.ceva.database.SessionHandler;
 import de.felixbrandt.ceva.entity.Instance;
-import de.felixbrandt.ceva.init.InstanceImportService;
 
 public class InstanceImportServiceTest
 {
@@ -55,7 +54,7 @@ public class InstanceImportServiceTest
   public void setUp ()
   {
     session_handler = TestSessionBuilder.build();
-    service = new InstanceImportService(session_handler);
+    service = new InstanceImportService(session_handler, false);
   }
 
   @After
@@ -76,6 +75,22 @@ public class InstanceImportServiceTest
 
     final InstanceFile other_file = new MockInstanceFile("123456");
     assertFalse(service.instanceExists(other_file));
+  }
+
+  @Test
+  public void testLoadInstance ()
+  {
+    final Instance instance = new Instance();
+    instance.setName("mockfile.txt");
+    instance.setChecksum("ABCDEF");
+    session_handler.getSession().save(instance);
+
+    service = new InstanceImportService(session_handler, false);
+    Instance newinstance = service.loadInstance("mockfile.txt");
+    assertEquals("", newinstance.getName());
+
+    service = new InstanceImportService(session_handler, true);
+    assertEquals(instance, service.loadInstance("mockfile.txt"));
   }
 
   @Test

@@ -17,20 +17,25 @@ public class InstanceImportService
 {
   private static final Logger LOGGER = LogManager.getLogger();
   private final SessionHandler session_handler;
+  private final boolean id_by_name;
 
   public static void run (final SessionHandler session_handler,
-          final List<InstanceFile> instance_files)
+          final List<InstanceFile> instance_files, final boolean id_by_name)
   {
-    final InstanceImportService service = new InstanceImportService(session_handler);
+    final InstanceImportService service = new InstanceImportService(
+            session_handler, id_by_name);
     service.importInstanceFiles(instance_files);
   }
 
-  public InstanceImportService(final SessionHandler handler)
+  public InstanceImportService(final SessionHandler handler,
+          final boolean id_by_name)
   {
     session_handler = handler;
+    this.id_by_name = id_by_name;
   }
 
-  public final void importInstanceFiles (final List<InstanceFile> instance_files)
+  public final void importInstanceFiles (
+          final List<InstanceFile> instance_files)
   {
     for (final InstanceFile instance_file : instance_files) {
       LOGGER.debug("check file " + instance_file.getFilename() + " for import");
@@ -50,7 +55,8 @@ public class InstanceImportService
 
         return instance;
       } else {
-        LOGGER.debug("instance " + instance_file.getFilename() + " already exists");
+        LOGGER.debug(
+                "instance " + instance_file.getFilename() + " already exists");
       }
     } else {
       LOGGER.warn("instance " + instance_file.getFilename() + " not readable");
@@ -61,13 +67,30 @@ public class InstanceImportService
 
   public final Instance createInstance (final InstanceFile instance_file)
   {
-    final Instance instance = new Instance();
+    Instance instance = loadInstance(instance_file.getFilename());
 
     instance.setName(instance_file.getFilename());
     instance.setChecksum(instance_file.getHash());
     instance.setContent(instance_file.getContent());
 
     return instance;
+
+  }
+
+  public final Instance loadInstance (final String name)
+  {
+    if (id_by_name) {
+      final Query query = session_handler.getSession()
+              .createQuery("from Instance where name = :name");
+      query.setParameter("name", name);
+
+      if (query.list().size() > 0) {
+        LOGGER.info("Updating instance {}", name);
+        return (Instance) query.list().iterator().next();
+      }
+    }
+
+    return new Instance();
   }
 
   public final boolean instanceExists (final InstanceFile instance_file)

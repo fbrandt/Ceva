@@ -17,16 +17,20 @@ public class ImportService
   {
   }
 
-  public static void run (final SessionHandler session_handler, final Configuration config)
+  public static void run (final SessionHandler session_handler,
+          final Configuration config)
   {
-    InstanceImportService.run(session_handler, config.getInstanceConfig().getInstances());
+    InstanceImportService.run(session_handler,
+            config.getInstanceConfig().getInstances(),
+            config.getIdentifyInstancesByName());
     session_handler.saveAndBegin();
 
     final InstanceMetricService instance_metric_import = new InstanceMetricService(
             session_handler);
     instance_metric_import.update(config.getInstanceMetrics().getRules());
 
-    final AlgorithmService algorithm_import = new AlgorithmService(session_handler);
+    final AlgorithmService algorithm_import = new AlgorithmService(
+            session_handler);
     algorithm_import.update(config.getAlgorithms().getRules());
 
     final SolutionMetricService solution_metric_import = new SolutionMetricService(
