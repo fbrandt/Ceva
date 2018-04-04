@@ -3,6 +3,7 @@ package de.felixbrandt.support;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
@@ -20,6 +21,7 @@ public abstract class ShellCommand
   private long process_start_time;
   private long process_finish_time;
   private boolean timelimit_exceeded;
+  private Map<String, String> additional_environment;
 
   public static class ShellCommandError extends Exception
   {
@@ -43,14 +45,16 @@ public abstract class ShellCommand
 
   public ShellCommand(String command, InputStream stdin)
   {
-    this(command, stdin, 0);
+    this(command, stdin, 0, null);
   }
 
-  public ShellCommand(String _command, InputStream _stdin, int _timelimit)
+  public ShellCommand(String _command, InputStream _stdin, int _timelimit,
+          Map<String, String> env)
   {
     command = _command;
     stdin = _stdin;
     timelimit = _timelimit;
+    additional_environment = env;
   }
 
   public final String getCommand ()
@@ -63,17 +67,31 @@ public abstract class ShellCommand
     return stdin;
   }
 
-  protected final Process startProcess (final String[] command) throws IOException
+  protected final Process startProcess (final String[] command)
+          throws IOException
   {
     if (process == null) {
       process_start_time = System.currentTimeMillis();
-      process = Runtime.getRuntime().exec(command);
+      ProcessBuilder process_builder = new ProcessBuilder(command);
+      if (additional_environment != null) {
+        mergeEnvironment(additional_environment, process_builder.environment());
+      }
+      process = process_builder.start();
     }
 
     return process;
   }
 
-  protected final void waitForProcess () throws InterruptedException, ShellCommandWarning
+  protected void mergeEnvironment (final Map<String, String> from,
+          final Map<String, String> to)
+  {
+    from.forEach( (key, value) -> {
+      to.put(key, value);
+    });
+  }
+
+  protected final void waitForProcess ()
+          throws InterruptedException, ShellCommandWarning
   {
     boolean finished = true;
     if (timelimit == 0) {

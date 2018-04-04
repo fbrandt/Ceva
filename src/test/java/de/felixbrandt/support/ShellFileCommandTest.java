@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.InputStream;
+import java.util.HashMap;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +38,8 @@ public class ShellFileCommandTest
   @Test
   public void testRunFail ()
   {
-    final ShellFileCommand command = new ShellFileCommand("invalidcommand", stdin);
+    final ShellFileCommand command = new ShellFileCommand("invalidcommand",
+            stdin);
     try {
       command.run();
     } catch (Exception e) {
@@ -90,7 +92,7 @@ public class ShellFileCommandTest
     }
 
     final ShellFileCommand command = new ShellFileCommand(
-            "ping " + count_param + " 10 127.0.0.1", stdin, 3);
+            "ping " + count_param + " 10 127.0.0.1", stdin, 3, null);
     try {
       command.run();
       fail();
@@ -101,5 +103,23 @@ public class ShellFileCommandTest
     // use same exit code as linux timeout command
     assertEquals(ShellCommand.TIMELIMIT_EXCEEDED, command.getExitcode());
     assertEquals(3.0, command.getRuntime(), 0.5);
+  }
+
+  @Test(timeout = 1000)
+  public void testEnvironment () throws ShellCommandError, ShellCommandWarning
+  {
+    HashMap<String, String> env = new HashMap<String, String>();
+    env.put("CEVA_WORKER_ID", "42");
+
+    final String osname = System.getProperty("os.name");
+    String command_string = "echo %CEVA_WORKER_ID%";
+    if (osname.matches("(.*)linux(.*)")) {
+      command_string = "echo $CEVA_WORKER_ID";
+    }
+
+    ShellFileCommand command = new ShellFileCommand(command_string,
+            StreamSupport.createEmptyInputStream(), 0, env);
+    command.run();
+    assertEquals("42", command.getStdoutString().trim());
   }
 }

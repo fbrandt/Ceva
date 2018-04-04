@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Map;
 import java.util.Vector;
 
 /**
@@ -20,9 +21,10 @@ public class ShellFileCommand extends ShellCommand
     super(command, stdin);
   }
 
-  public ShellFileCommand(final String command, final InputStream stdin, final int timeout)
+  public ShellFileCommand(final String command, final InputStream stdin,
+          final int timeout, final Map<String, String> env)
   {
-    super(command, stdin, timeout);
+    super(command, stdin, timeout, env);
   }
 
   public void run () throws ShellCommandError, ShellCommandWarning
@@ -33,9 +35,10 @@ public class ShellFileCommand extends ShellCommand
       File stdout_file = File.createTempFile("ceva", ".stdout");
       File stderr_file = File.createTempFile("ceva", ".stderr");
 
-      final Vector<String> full_command = getOSPrefix(System.getProperty("os.name"));
-      full_command.add(getCommand() + " >" + stdout_file.getAbsolutePath() + " 2>"
-              + stderr_file.getAbsolutePath());
+      final Vector<String> full_command = getOSPrefix(
+              System.getProperty("os.name"));
+      full_command.add(getCommand() + " >" + stdout_file.getAbsolutePath()
+              + " 2>" + stderr_file.getAbsolutePath());
 
       final String[] c = full_command.toArray(new String[full_command.size()]);
 
@@ -47,12 +50,14 @@ public class ShellFileCommand extends ShellCommand
 
       waitForProcess();
 
-      stdout = StreamSupport.getStringFromInputStream(new FileInputStream(stdout_file));
-      stderr = StreamSupport.getStringFromInputStream(new FileInputStream(stderr_file));
+      stdout = StreamSupport
+              .getStringFromInputStream(new FileInputStream(stdout_file));
+      stderr = StreamSupport
+              .getStringFromInputStream(new FileInputStream(stderr_file));
 
       if (!stdout_file.delete() || !stderr_file.delete()) {
-        throw new ShellCommandWarning("could not delete output files: " + stdout_file.getName()
-                + " or " + stderr_file.getName());
+        throw new ShellCommandWarning("could not delete output files: "
+                + stdout_file.getName() + " or " + stderr_file.getName());
       }
 
     } catch (final IOException e) {

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +24,8 @@ public class CommandControllerTest
     public MockCommand mock_command = new MockCommand("", "", 0);
 
     @Override
-    public Command create (final String command, final InputStream stdin, final int timelimit)
+    public Command create (final String command, final InputStream stdin,
+            final int timelimit, final Map<String, String> env)
     {
       last_command = command;
       last_stdin = StreamSupport.getStringFromInputStream(stdin);
@@ -41,7 +43,8 @@ public class CommandControllerTest
   public void setup ()
   {
     command_factory = new MockCommandFactory();
-    controller = new CommandController(command_factory, new MockVersionProvider(123));
+    controller = new CommandController(command_factory,
+            new MockVersionProvider(123));
     executable = new MockExecutable("", "RUNPATH", null);
     source = new MockDataSource("filename", "content");
   }

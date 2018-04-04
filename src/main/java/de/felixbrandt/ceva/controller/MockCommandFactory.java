@@ -1,6 +1,7 @@
 package de.felixbrandt.ceva.controller;
 
 import java.io.InputStream;
+import java.util.Map;
 
 import de.felixbrandt.ceva.controller.base.Command;
 import de.felixbrandt.support.StreamSupport;
@@ -21,7 +22,7 @@ public class MockCommandFactory extends CommandFactory
 
   @Override
   public final Command create (final String command, final InputStream stdin,
-          final int timelimit)
+          final int timelimit, final Map<String, String> env)
   {
     last_command_string = command;
     last_input_stream = StreamSupport.getStringFromInputStream(stdin);

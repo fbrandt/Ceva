@@ -3,6 +3,7 @@ package de.felixbrandt.support;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Map;
 import java.util.Vector;
 
 /**
@@ -22,9 +23,10 @@ public class ShellStreamCommand extends ShellCommand
     super(command, stdin);
   }
 
-  public ShellStreamCommand(final String command, final InputStream stdin, final int timeout)
+  public ShellStreamCommand(final String command, final InputStream stdin,
+          final int timeout, Map<String, String> env)
   {
-    super(command, stdin, timeout);
+    super(command, stdin, timeout, env);
   }
 
   public void run () throws ShellCommandError, ShellCommandWarning
@@ -32,7 +34,8 @@ public class ShellStreamCommand extends ShellCommand
     Process process = null;
 
     try {
-      final Vector<String> full_command = getOSPrefix(System.getProperty("os.name"));
+      final Vector<String> full_command = getOSPrefix(
+              System.getProperty("os.name"));
       full_command.add(getCommand());
 
       final String[] c = full_command.toArray(new String[full_command.size()]);
