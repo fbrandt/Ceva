@@ -14,14 +14,11 @@ public abstract class ShellCommand
 {
   private static final double MICROSECONDS_PER_SECOND = 1000.0;
   public static final int TIMELIMIT_EXCEEDED = 124;
-  private String command;
-  private InputStream stdin;
-  private int timelimit;
+  private ShellCommandConfig config;
   private Process process;
   private long process_start_time;
   private long process_finish_time;
   private boolean timelimit_exceeded;
-  private Map<String, String> additional_environment;
 
   public static class ShellCommandError extends Exception
   {
@@ -43,28 +40,19 @@ public abstract class ShellCommand
     }
   }
 
-  public ShellCommand(String command, InputStream stdin)
+  public ShellCommand(ShellCommandConfig config)
   {
-    this(command, stdin, 0, null);
-  }
-
-  public ShellCommand(String _command, InputStream _stdin, int _timelimit,
-          Map<String, String> env)
-  {
-    command = _command;
-    stdin = _stdin;
-    timelimit = _timelimit;
-    additional_environment = env;
+    this.config = config;
   }
 
   public final String getCommand ()
   {
-    return command;
+    return config.getCommand();
   }
 
   protected final InputStream getStdin ()
   {
-    return stdin;
+    return config.getStdin();
   }
 
   protected final Process startProcess (final String[] command)
@@ -73,8 +61,9 @@ public abstract class ShellCommand
     if (process == null) {
       process_start_time = System.currentTimeMillis();
       ProcessBuilder process_builder = new ProcessBuilder(command);
-      if (additional_environment != null) {
-        mergeEnvironment(additional_environment, process_builder.environment());
+      if (config.getEnvironment() != null) {
+        mergeEnvironment(config.getEnvironment(),
+                process_builder.environment());
       }
       process = process_builder.start();
     }
@@ -94,10 +83,10 @@ public abstract class ShellCommand
           throws InterruptedException, ShellCommandWarning
   {
     boolean finished = true;
-    if (timelimit == 0) {
+    if (config.getTimelimit() == 0) {
       process.waitFor();
     } else {
-      finished = process.waitFor(timelimit, TimeUnit.SECONDS);
+      finished = process.waitFor(config.getTimelimit(), TimeUnit.SECONDS);
     }
     process_finish_time = System.currentTimeMillis();
 

@@ -20,11 +20,14 @@ public class ShellStreamCommandTest
 {
 
   InputStream stdin;
+  ShellCommandConfig config;
 
   @Before
   public void setup ()
   {
     stdin = StreamSupport.createEmptyInputStream();
+    config = new ShellCommandConfig();
+    config.setStdin(stdin);
   }
 
   @Test
@@ -46,7 +49,8 @@ public class ShellStreamCommandTest
   @Test
   public void testRun () throws ShellCommandError, ShellCommandWarning
   {
-    final ShellStreamCommand command = new ShellStreamCommand("echo 1", stdin);
+    config.setCommand("echo 1");
+    final ShellStreamCommand command = new ShellStreamCommand(config);
     command.run();
     assertEquals(1, Integer.parseInt(command.getStdoutString().trim()));
     assertEquals("", command.getStderrString());
@@ -56,7 +60,8 @@ public class ShellStreamCommandTest
   @Test
   public void testRunFail () throws ShellCommandError, ShellCommandWarning
   {
-    final ShellStreamCommand command = new ShellStreamCommand("invalidcommand", stdin);
+    config.setCommand("invalidcommand");
+    final ShellStreamCommand command = new ShellStreamCommand(config);
     command.run();
     assertEquals("", command.getStdoutString());
     assertTrue(command.getStderrString().contains("invalidcommand"));
@@ -64,13 +69,16 @@ public class ShellStreamCommandTest
   }
 
   @Test(timeout = 10000)
-  public void testFind () throws FileNotFoundException, ShellCommandError, ShellCommandWarning
+  public void testFind ()
+          throws FileNotFoundException, ShellCommandError, ShellCommandWarning
   {
     if (!"Linux".equals(System.getProperty("os.name"))) {
       final File file = new File("test/result.log");
       FileInputStream stderr = new FileInputStream(file.getPath());
       final ShellStreamCommand command = new ShellStreamCommand(
-              "C:\\WINDOWS\\System32\\find.exe /C \"Lorem ipsum\"", stderr);
+              new ShellCommandConfig(
+                      "C:\\WINDOWS\\System32\\find.exe /C \"Lorem ipsum\"",
+                      stderr));
       command.run();
       assertEquals(76, Integer.parseInt(command.getStdoutString().trim()));
       assertEquals("", command.getStderrString());
@@ -80,7 +88,8 @@ public class ShellStreamCommandTest
   @Test
   public void testGetStderr () throws ShellCommandError, ShellCommandWarning
   {
-    final ShellStreamCommand command = new ShellStreamCommand("echo 1 >&2", stdin);
+    config.setCommand("echo 1 >&2");
+    final ShellStreamCommand command = new ShellStreamCommand(config);
     command.run();
     assertEquals("", command.getStdoutString());
     assertEquals("1", command.getStderrString().substring(0, 1));
@@ -90,7 +99,8 @@ public class ShellStreamCommandTest
   @Test
   public void testGetExitCode () throws ShellCommandError, ShellCommandWarning
   {
-    final ShellStreamCommand command = new ShellStreamCommand("exit 1", stdin);
+    config.setCommand("exit 1");
+    final ShellStreamCommand command = new ShellStreamCommand(config);
     command.run();
     assertEquals(1, command.getExitcode());
   }
@@ -106,8 +116,8 @@ public class ShellStreamCommandTest
       count_param = "-n";
     }
 
-    final ShellStreamCommand command = new ShellStreamCommand(
-            "ping " + count_param + " 2 127.0.0.1", stdin);
+    config.setCommand("ping " + count_param + " 2 127.0.0.1");
+    final ShellStreamCommand command = new ShellStreamCommand(config);
     command.run();
     Thread.sleep(1000);
     assertEquals(1.0, command.getRuntime(), 0.5);

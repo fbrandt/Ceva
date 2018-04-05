@@ -18,17 +18,21 @@ public class ShellFileCommandTest
 {
 
   InputStream stdin;
+  ShellCommandConfig config;
 
   @Before
   public void setup ()
   {
     stdin = StreamSupport.createEmptyInputStream();
+    config = new ShellCommandConfig();
+    config.setStdin(stdin);
   }
 
   @Test
   public void testRun () throws ShellCommandError, ShellCommandWarning
   {
-    final ShellFileCommand command = new ShellFileCommand("echo 1", stdin);
+    config.setCommand("echo 1");
+    final ShellFileCommand command = new ShellFileCommand(config);
     command.run();
     assertEquals(1, Integer.parseInt(command.getStdoutString().trim()));
     assertEquals("", command.getStderrString());
@@ -38,8 +42,8 @@ public class ShellFileCommandTest
   @Test
   public void testRunFail ()
   {
-    final ShellFileCommand command = new ShellFileCommand("invalidcommand",
-            stdin);
+    config.setCommand("invalidcommand");
+    final ShellFileCommand command = new ShellFileCommand(config);
     try {
       command.run();
     } catch (Exception e) {
@@ -54,7 +58,8 @@ public class ShellFileCommandTest
   @Test
   public void testGetExitCode () throws ShellCommandError, ShellCommandWarning
   {
-    final ShellFileCommand command = new ShellFileCommand("exit 1", stdin);
+    config.setCommand("exit 1");
+    final ShellFileCommand command = new ShellFileCommand(config);
     command.run();
     assertEquals(1, command.getExitcode());
   }
@@ -70,8 +75,8 @@ public class ShellFileCommandTest
       count_param = "-n";
     }
 
-    final ShellFileCommand command = new ShellFileCommand(
-            "ping " + count_param + " 2 127.0.0.1", stdin);
+    config.setCommand("ping " + count_param + " 2 127.0.0.1");
+    final ShellFileCommand command = new ShellFileCommand(config);
     command.run();
     assertEquals(1.0, command.getRuntime(), 0.5);
 
@@ -91,8 +96,9 @@ public class ShellFileCommandTest
       count_param = "-n";
     }
 
-    final ShellFileCommand command = new ShellFileCommand(
-            "ping " + count_param + " 10 127.0.0.1", stdin, 3, null);
+    config.setCommand("ping " + count_param + " 10 127.0.0.1");
+    config.setTimelimit(3);
+    final ShellFileCommand command = new ShellFileCommand(config);
     try {
       command.run();
       fail();
@@ -117,8 +123,8 @@ public class ShellFileCommandTest
       command_string = "echo $CEVA_WORKER_ID";
     }
 
-    ShellFileCommand command = new ShellFileCommand(command_string,
-            StreamSupport.createEmptyInputStream(), 0, env);
+    ShellFileCommand command = new ShellFileCommand(new ShellCommandConfig(
+            command_string, StreamSupport.createEmptyInputStream(), 0, env));
     command.run();
     assertEquals("42", command.getStdoutString().trim());
   }

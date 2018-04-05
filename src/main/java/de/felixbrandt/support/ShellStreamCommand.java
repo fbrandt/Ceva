@@ -1,9 +1,7 @@
 package de.felixbrandt.support;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Map;
 import java.util.Vector;
 
 /**
@@ -18,15 +16,9 @@ public class ShellStreamCommand extends ShellCommand
   private StreamedString stdout;
   private StreamedString stderr;
 
-  public ShellStreamCommand(final String command, final InputStream stdin)
+  public ShellStreamCommand(final ShellCommandConfig config)
   {
-    super(command, stdin);
-  }
-
-  public ShellStreamCommand(final String command, final InputStream stdin,
-          final int timeout, Map<String, String> env)
-  {
-    super(command, stdin, timeout, env);
+    super(config);
   }
 
   public void run () throws ShellCommandError, ShellCommandWarning
