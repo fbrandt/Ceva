@@ -71,12 +71,14 @@ public abstract class ShellCommand
     return process;
   }
 
-  protected void mergeEnvironment (final Map<String, String> from,
+  public static void mergeEnvironment (final Map<String, String> from,
           final Map<String, String> to)
   {
-    from.forEach( (key, value) -> {
-      to.put(key, value);
-    });
+    if (from != null && to != null) {
+      from.forEach( (key, value) -> {
+        to.put(key, value);
+      });
+    }
   }
 
   protected final void waitForProcess ()
