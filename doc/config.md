@@ -76,6 +76,7 @@ database:
 # Worker Configuration
 
 By default CEVA executes all experiments and metrics with one worker on the local machine one after another. But, experiments and metrics can also be run in parallel, either on the local machine or distributed via a [Gearman](http://gearman.org/) job server. Therefore, the number of workers in a CEVA instance can be configured with the `worker` parameter. In the distributed case, you need to start a CEVA instance on each host and set the `mode` parameter. There needs to be a single CEVA instance in mode `master` that manages the database and submits the jobs which need to be done into a job queue. On the other end multiple CEVA instances in mode `slave` run the jobs and submit the results back to the master instance. Both master and slave instances can run multiple worker threads to do the work. If no Gearman `host` attribute is given, only workers of the local CEVA instance will execute the jobs. 
+Each worker started by a CEVA instance has a unique numeric `CEVA_WORKER_ID` environment variable set. This can be used to avoid clashes when opening ports or writing files from inside the algorithm commands.
 
 ### Parameters
  * `host`: Host address of the Gearman job server to send/receive jobs and results (default: empty)
