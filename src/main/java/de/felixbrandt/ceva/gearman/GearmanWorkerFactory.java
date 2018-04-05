@@ -1,5 +1,8 @@
 package de.felixbrandt.ceva.gearman;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.gearman.client.GearmanClient;
 import org.gearman.client.GearmanClientImpl;
 import org.gearman.common.GearmanJobServerConnection;
@@ -22,19 +25,31 @@ import de.felixbrandt.ceva.queue.WorkerFactory;
 public class GearmanWorkerFactory implements WorkerFactory
 {
   private QueueConfiguration config;
+  private static int created_command_factories = 0;
 
   public GearmanWorkerFactory(final QueueConfiguration _config)
   {
     config = _config;
   }
 
+  public synchronized final CommandFactory createCommandFactory ()
+  {
+    Map<String, String> environment = new HashMap<String, String>();
+    environment.put("CEVA_WORKER_ID", String.valueOf(created_command_factories));
+    created_command_factories += 1;
+
+    return new ShellCommandFactory(environment);
+  }
+
   public final Controller getControllerStack ()
   {
     final GearmanClient client = new GearmanClientImpl();
-    client.addJobServer(new GearmanNIOJobServerConnection(config.getHost(), config.getPort()));
+    client.addJobServer(new GearmanNIOJobServerConnection(config.getHost(),
+            config.getPort()));
 
-    final CommandFactory command_factory = new ShellCommandFactory();
-    final VersionProvider version_provider = new RunVersionProvider(command_factory);
+    final CommandFactory command_factory = createCommandFactory();
+    final VersionProvider version_provider = new RunVersionProvider(
+            command_factory);
     final Controller command_controller = new CommandController(command_factory,
             version_provider);
 
@@ -49,10 +64,11 @@ public class GearmanWorkerFactory implements WorkerFactory
 
   public final Worker create ()
   {
-    final GearmanJobServerConnection conn = new GearmanNIOJobServerConnection(config.getHost(),
-            config.getPort());
+    final GearmanJobServerConnection conn = new GearmanNIOJobServerConnection(
+            config.getHost(), config.getPort());
 
-    return new GearmanJobWorker(conn, getFunctionFactory(), config.getWorkerIdleTimeout());
+    return new GearmanJobWorker(conn, getFunctionFactory(),
+            config.getWorkerIdleTimeout());
   }
 
 }

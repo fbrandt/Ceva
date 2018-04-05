@@ -123,8 +123,9 @@ public class ShellFileCommandTest
       command_string = "echo $CEVA_WORKER_ID";
     }
 
-    ShellFileCommand command = new ShellFileCommand(new ShellCommandConfig(
-            command_string, StreamSupport.createEmptyInputStream(), 0, env));
+    config.setCommand(command_string);
+    config.setEnvironment(env);
+    ShellFileCommand command = new ShellFileCommand(config);
     command.run();
     assertEquals("42", command.getStdoutString().trim());
   }
