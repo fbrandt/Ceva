@@ -24,7 +24,7 @@ public class QueueReaderStatus<ElemType> implements QueueReader<ElemType>
 
   public final boolean hasNext ()
   {
-    return !status.isDone() || result_queue.hasNext();
+    return !status.isDone(result_count) || result_queue.hasNext();
   }
 
   @SuppressWarnings("unchecked")

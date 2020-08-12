@@ -32,6 +32,8 @@ public class QueueReaderStatusTest
       return this.done;
     }
 
+    public boolean isDone (final int actual_count) { return false; }
+
   };
 
   class DummyQueueReader implements QueueReader<Object>
@@ -81,7 +83,7 @@ public class QueueReaderStatusTest
   {
     writer_status.jobs = 5;
     writer_status.setDone(true);
-    assertFalse(reader_status.hasNext());
+    assertTrue(reader_status.hasNext());
   }
 
   @Test

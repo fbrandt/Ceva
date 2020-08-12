@@ -16,10 +16,16 @@ public class QueueWriterStatus<ElemType> implements QueueWriter<ElemType>, Queue
     done = false;
   }
 
-  public final void add (final ElemType object)
+  public final boolean add (final ElemType object)
   {
+    if (done) {
+      return false;
+    }
+
     queue.add(object);
     count++;
+
+    return true;
   }
 
   public final int getJobCount ()
@@ -32,9 +38,19 @@ public class QueueWriterStatus<ElemType> implements QueueWriter<ElemType>, Queue
     done = done_state;
   }
 
+  /**
+   * No more jobs will be added to queue.
+   */
   public final boolean isDone ()
   {
     return done;
   }
 
+  /**
+   * Not more than the given job count was pushed to this queue.
+   */
+  public final boolean isDone (final int actual_count)
+  {
+    return isDone() && actual_count >= count;
+  }
 }

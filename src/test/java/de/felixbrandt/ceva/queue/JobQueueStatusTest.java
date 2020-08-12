@@ -1,7 +1,5 @@
 package de.felixbrandt.ceva.queue;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -11,6 +9,8 @@ import org.junit.Test;
 import de.felixbrandt.ceva.queue.BaseQueueWriter;
 import de.felixbrandt.ceva.queue.Job;
 import de.felixbrandt.ceva.queue.QueueWriterStatus;
+
+import static org.junit.Assert.*;
 
 public class JobQueueStatusTest
 {
@@ -25,7 +25,7 @@ public class JobQueueStatusTest
   }
 
   @Test
-  public void test ()
+  public void test () throws Exception
   {
     queue.add(new Job(null, null));
     assertEquals(1, queue.getJobCount());
@@ -33,10 +33,27 @@ public class JobQueueStatusTest
   }
 
   @Test
+  public void testFailAddingAfterDone ()
+  {
+    queue.setDone(true);
+    assertFalse(queue.add(new Job(null, null)));
+  }
+
+  @Test
   public void testDone ()
   {
-    assertEquals(false, queue.isDone());
+    assertFalse(queue.isDone());
     queue.setDone(true);
-    assertEquals(true, queue.isDone());
+    assertTrue(queue.isDone());
+  }
+
+  @Test
+  public void testDoneCount () throws Exception
+  {
+    queue.add(new Job(null, null));
+    queue.setDone(true);
+    assertFalse(queue.isDone(0));
+    assertTrue(queue.isDone(1));
+    assertTrue(queue.isDone(2));
   }
 }

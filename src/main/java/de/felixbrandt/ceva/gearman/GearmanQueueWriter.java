@@ -32,7 +32,7 @@ public class GearmanQueueWriter<ElemType> implements QueueWriter<ElemType>
     result_queue = _result_queue;
   }
 
-  public final void add (final ElemType object)
+  public final boolean add (final ElemType object)
   {
     final byte[] data = SerializeSupport.serialize(object);
     final GearmanJob job = GearmanJobImpl.createJob(queue_name, data, null);
@@ -46,8 +46,10 @@ public class GearmanQueueWriter<ElemType> implements QueueWriter<ElemType>
       }
 
       LOGGER.debug("submitted job to queue {}", queue_name);
+      return true;
     } catch (final RejectedExecutionException e) {
       LOGGER.error("failed to execute job via queue " + queue_name);
+      return false;
     }
   }
 

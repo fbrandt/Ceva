@@ -14,9 +14,9 @@ public class BaseQueueWriter<ElemType> implements QueueWriter<ElemType>
     queue = _queue;
   }
 
-  public final void add (final ElemType object)
+  public final boolean add (final ElemType object)
   {
-    queue.add(object);
+    return queue.add(object);
   }
 
 }

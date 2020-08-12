@@ -10,4 +10,6 @@ public interface QueueStatus
   void setDone (boolean done);
 
   boolean isDone ();
+
+  boolean isDone (final int actual_count);
 }

@@ -16,7 +16,7 @@ public class SynchedQueue<ElemType> implements QueueReader<ElemType>, QueueWrite
   private static final long WAIT_TIME = 100;
   private ElemType queued_element;
 
-  public final void add (final ElemType object)
+  public final boolean add (final ElemType object)
   {
     while (queued_element != null) {
       try {
@@ -35,6 +35,8 @@ public class SynchedQueue<ElemType> implements QueueReader<ElemType>, QueueWrite
         LOGGER.warn("interrupted waiting for current element to be removed");
       }
     }
+
+    return true;
   }
 
   private synchronized ElemType replace (final ElemType value)

@@ -5,5 +5,5 @@ package de.felixbrandt.ceva.queue;
  */
 public interface QueueWriter<ElemType>
 {
-  void add (ElemType object);
+  boolean add (ElemType object);
 }
