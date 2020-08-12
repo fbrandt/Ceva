@@ -158,17 +158,17 @@ public class SolutionDataDBStorageTest
   @Test
   public void testCountAlgorithmInstance ()
   {
-    assertEquals(0, storage.count(metric, instance, 1));
+    assertEquals(0, storage.count(metric, solution, 1));
     session_handler.getSession().save(data);
-    assertEquals(1, storage.count(metric, instance, 1));
+    assertEquals(1, storage.count(metric, solution, 1));
   }
 
   @Test
   public void testCountAlgorithmInstanceVersion ()
   {
-    assertEquals(0, storage.count(metric, instance, 1));
+    assertEquals(0, storage.count(metric, solution, 1));
     session_handler.getSession().save(data);
-    assertEquals(0, storage.count(metric, instance, 2));
+    assertEquals(0, storage.count(metric, solution, 2));
   }
 
   @Test
