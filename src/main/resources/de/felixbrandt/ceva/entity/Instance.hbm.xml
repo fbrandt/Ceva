@@ -5,7 +5,7 @@
 		</id>
 		<property name="name" />
 		<property name="checksum" />
-		<property name="content" type="org.hibernate.type.StringClobType" />
+		<property name="content" type="org.hibernate.type.MaterializedClobType" />
 		<property name="active" />
 		<property name="timelimit" />
 	</class>

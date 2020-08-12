@@ -10,9 +10,9 @@
 			<column name="instance" />
 		</many-to-one>
 		<property name="version" />
-		<property name="stdout" type="org.hibernate.type.StringClobType" />
-		<property name="stderr" type="org.hibernate.type.StringClobType" />
-		<property name="machine" type="org.hibernate.type.StringClobType" />
+		<property name="stdout" type="org.hibernate.type.MaterializedClobType" />
+		<property name="stderr" type="org.hibernate.type.MaterializedClobType" />
+		<property name="machine" type="org.hibernate.type.TextType" />
 		<property name="runtime" />
 		<property name="exitcode" />
 		<property name="parameters" type="org.hibernate.type.TextType" />
