@@ -5,7 +5,7 @@ import java.security.NoSuchAlgorithmException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.util.Charsets;
+import java.nio.charset.Charset;
 
 /**
  * Helper methods for MD5 hashing.
@@ -27,7 +27,7 @@ public class HashSupport
     try {
       algo = MessageDigest.getInstance("MD5");
 
-      return toHex(algo.digest(string.getBytes(Charsets.UTF_8)));
+      return toHex(algo.digest(string.getBytes(Charset.forName("UTF-8"))));
     } catch (final NoSuchAlgorithmException e) {
       logger.error(e.getMessage());
     }
