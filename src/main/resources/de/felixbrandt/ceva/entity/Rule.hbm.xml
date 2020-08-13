@@ -5,10 +5,10 @@
 			<generator class="increment"></generator>
 		</id>
 		<property name="name" />
-		<property name="description" type="org.hibernate.type.MaterializedClobType" />
-		<property name="basePath" type="org.hibernate.type.MaterializedClobType" />
-		<property name="versionPath" type="org.hibernate.type.MaterializedClobType" />
-		<property name="runPath" type="org.hibernate.type.MaterializedClobType" />
+		<property name="description" type="org.hibernate.type.TextType" />
+		<property name="basePath" type="org.hibernate.type.TextType" />
+		<property name="versionPath" type="org.hibernate.type.TextType" />
+		<property name="runPath" type="org.hibernate.type.TextType" />
 		<property name="active" />
 
 		<union-subclass name="de.felixbrandt.ceva.entity.Metric">

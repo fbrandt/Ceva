@@ -12,7 +12,7 @@
       	<property name="value" />
       </union-subclass>
       <union-subclass name="de.felixbrandt.ceva.entity.InstanceDataString">
-        <property name="value" type="org.hibernate.type.MaterializedClobType"/>
+        <property name="value" type="org.hibernate.type.TextType"/>
       </union-subclass>
       <union-subclass name="de.felixbrandt.ceva.entity.InstanceDataDouble">
         <property name="value"/>
@@ -25,7 +25,7 @@
       	<property name="value" />
       </union-subclass>
       <union-subclass name="de.felixbrandt.ceva.entity.SolutionDataString">
-        <property name="value"  type="org.hibernate.type.MaterializedClobType"/>
+        <property name="value"  type="org.hibernate.type.TextType"/>
       </union-subclass>
       <union-subclass name="de.felixbrandt.ceva.entity.SolutionDataDouble">
         <property name="value" />
