@@ -2,7 +2,7 @@ package de.felixbrandt.ceva.provider;
 
 import java.util.Collection;
 
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 
 import de.felixbrandt.ceva.database.SessionHandler;
 import de.felixbrandt.ceva.entity.Metric;

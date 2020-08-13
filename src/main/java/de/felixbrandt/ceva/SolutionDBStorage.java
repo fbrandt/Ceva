@@ -6,7 +6,7 @@ import java.util.HashSet;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.exception.DataException;
 
 import de.felixbrandt.ceva.algorithm.AlgorithmExecutable;

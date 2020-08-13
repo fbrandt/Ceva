@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 
 import de.felixbrandt.ceva.controller.base.DataSource;
 import de.felixbrandt.ceva.database.SessionHandler;

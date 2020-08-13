@@ -1,6 +1,6 @@
 package de.felixbrandt.ceva.provider;
 
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 
 public class HQLFilter
 {

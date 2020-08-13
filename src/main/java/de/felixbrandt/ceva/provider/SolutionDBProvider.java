@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 
 import de.felixbrandt.ceva.controller.base.DataSource;
 import de.felixbrandt.ceva.database.SessionHandler;
@@ -12,6 +12,8 @@ import de.felixbrandt.ceva.entity.Algorithm;
 import de.felixbrandt.ceva.entity.Instance;
 import de.felixbrandt.ceva.entity.Solution;
 import de.felixbrandt.ceva.metric.LazySolutionSource;
+
+import javax.persistence.PersistenceException;
 
 /**
  * Load Solution instances from database session.
@@ -45,10 +47,14 @@ public class SolutionDBProvider implements DataSourceProvider, SolutionProvider
     final Query stmt = session_handler.getSession().createQuery(query);
     stmt.setParameter("id", id);
 
-    final List<?> result = stmt.list();
+    try {
+      final List<?> result = stmt.list();
 
-    if (result.size() > 0) {
-      return (Solution) stmt.iterate().next();
+      if (result.size() > 0) {
+        return (Solution) stmt.iterate().next();
+      }
+    } catch (PersistenceException e) {
+      System.out.println(e.getMessage());
     }
 
     return null;

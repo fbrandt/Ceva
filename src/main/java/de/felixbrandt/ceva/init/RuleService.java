@@ -3,7 +3,7 @@ package de.felixbrandt.ceva.init;
 import java.util.Collection;
 import java.util.List;
 
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 
 import de.felixbrandt.ceva.database.SessionHandler;
 import de.felixbrandt.ceva.entity.Rule;
