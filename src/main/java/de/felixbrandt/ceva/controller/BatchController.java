@@ -60,7 +60,6 @@ public class BatchController
       LOGGER.info("running {} for {}({}/{})", executable, source.getName(), i++,
               n);
       run(executable, source);
-      source.doneForNow();
     }
   }
 
@@ -71,7 +70,6 @@ public class BatchController
       LOGGER.info("running {} for {}", executable, source.getName());
       run(executable, source);
     }
-    source.doneForNow();
   }
 
   public final void run (final Executable executable, final DataSource source)
