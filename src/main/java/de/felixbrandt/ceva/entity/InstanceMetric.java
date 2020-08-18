@@ -29,4 +29,9 @@ public class InstanceMetric extends Metric
       return "InstanceDataInteger";
     }
   }
+
+  public final String getSourceReference ()
+  {
+    return "instance";
+  }
 }

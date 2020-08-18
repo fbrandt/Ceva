@@ -2,10 +2,11 @@ package de.felixbrandt.ceva;
 
 import de.felixbrandt.ceva.config.Configuration;
 import de.felixbrandt.ceva.database.SessionHandler;
-import de.felixbrandt.ceva.init.AlgorithmService;
-import de.felixbrandt.ceva.init.InstanceImportService;
-import de.felixbrandt.ceva.init.InstanceMetricService;
-import de.felixbrandt.ceva.init.SolutionMetricService;
+import de.felixbrandt.ceva.entity.Metric;
+import de.felixbrandt.ceva.init.*;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Strategy updating the database with the current application configuration.
@@ -36,6 +37,13 @@ public class ImportService
     final SolutionMetricService solution_metric_import = new SolutionMetricService(
             session_handler);
     solution_metric_import.update(config.getSolutionMetrics().getRules());
+    session_handler.saveAndBegin();
+
+    final SolutionViewService view_service = new SolutionViewService(session_handler);
+    final Collection<Metric> metrics = new ArrayList<Metric>();
+    metrics.addAll(instance_metric_import.getAll());
+    metrics.addAll(solution_metric_import.getAll());
+    view_service.updateView(metrics);
     session_handler.saveAndBegin();
   }
 

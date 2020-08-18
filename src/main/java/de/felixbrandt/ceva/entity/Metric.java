@@ -53,6 +53,10 @@ public abstract class Metric extends Rule
   {
     throw new RuntimeException("this code must never be reached");
   }
+  public String getSourceReference ()
+  {
+    throw new RuntimeException("this code must never be reached");
+  }
 
   @Override
   public void updateRuleDetails (final Rule from)

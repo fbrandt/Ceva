@@ -59,4 +59,9 @@ public class SolutionMetric extends Metric
       return "SolutionDataInteger";
     }
   }
+
+  public final String getSourceReference ()
+  {
+    return "solution";
+  }
 }
