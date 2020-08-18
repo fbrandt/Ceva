@@ -12,7 +12,6 @@ import org.junit.Test;
 import de.felixbrandt.ceva.TestSessionBuilder;
 import de.felixbrandt.ceva.database.SessionHandler;
 import de.felixbrandt.ceva.entity.InstanceMetric;
-import de.felixbrandt.ceva.init.InstanceMetricService;
 
 public class InstanceMetricServiceTest
 {
