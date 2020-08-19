@@ -2,6 +2,8 @@ package de.felixbrandt.ceva.gearman;
 
 import static org.junit.Assert.assertEquals;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
 import de.felixbrandt.ceva.config.QueueConfiguration;
@@ -15,6 +17,7 @@ public class GearmanWorkerFactoryTest
   @Test
   public void testCreateCommandFactory ()
   {
+    final Logger LOGGER = LogManager.getLogger();
     GearmanWorkerFactory worker_factory = new GearmanWorkerFactory(
             new QueueConfiguration(new ParameterMap()));
 
@@ -22,6 +25,7 @@ public class GearmanWorkerFactoryTest
     CommandFactory command_factory_2 = worker_factory.createCommandFactory();
 
     final String osname = System.getProperty("os.name");
+    LOGGER.debug("OS Name: " + osname);
     String command_string = "echo %CEVA_WORKER_ID%";
     if (osname.matches("(.*)linux(.*)")) {
       command_string = "echo $CEVA_WORKER_ID";
