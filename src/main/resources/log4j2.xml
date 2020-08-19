@@ -6,6 +6,9 @@
     </Console>
   </Appenders>
   <Loggers>
+    <Logger name="org.hibernate" level="fatal">
+      <AppenderRef ref="Console"/>
+    </Logger>
     <Logger name="de.felixbrandt.ceva" level="info" additivity="false">
       <AppenderRef ref="Console"/>
     </Logger>
