@@ -27,7 +27,7 @@ public class GearmanWorkerFactoryTest
     final String osname = System.getProperty("os.name");
     LOGGER.debug("OS Name: " + osname);
     String command_string = "echo %CEVA_WORKER_ID%";
-    if (osname.matches("(.*)linux(.*)")) {
+    if (osname.matches("(.*)inux(.*)")) {
       command_string = "echo $CEVA_WORKER_ID";
     }
 

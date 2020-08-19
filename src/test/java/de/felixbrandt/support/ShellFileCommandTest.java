@@ -119,7 +119,7 @@ public class ShellFileCommandTest
 
     final String osname = System.getProperty("os.name");
     String command_string = "echo %CEVA_WORKER_ID%";
-    if (osname.matches("(.*)linux(.*)")) {
+    if (osname.matches("(.*)inux(.*)")) {
       command_string = "echo $CEVA_WORKER_ID";
     }
 

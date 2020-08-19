@@ -107,10 +107,10 @@ public abstract class ShellCommand
     final String osname = _osname.toLowerCase(Locale.ENGLISH);
     final Vector<String> result = new Vector<String>();
 
-    if (osname.matches("(.*)windows(.*)")) {
+    if (osname.matches("(.*)indows(.*)")) {
       result.add("cmd");
       result.add("/c");
-    } else if (osname.matches("(.*)linux(.*)")) {
+    } else if (osname.matches("(.*)inux(.*)")) {
       result.add("/bin/bash");
       result.add("-c");
     }
